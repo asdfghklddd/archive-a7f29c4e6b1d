@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f2efe6">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Andy 的个人学习积累：项目复盘、STAR 经历与技术知识手册。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23152036'/%3E%3Cpath d='M17 18h30v7H25v8h18v7H25v8h22v7H17z' fill='%23f2efe6'/%3E%3C/svg%3E">
+  <title>面试积累档案 · Interview Field Notes</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2efe6;
+      --paper-strong: #fffdf6;
+      --ink: #152036;
+      --muted: #596270;
+      --line: #c9c3b5;
+      --blue: #164b88;
+      --red: #b43d2c;
+      --focus: #0067c5;
+      --shadow: 0 1rem 3rem rgba(21, 32, 54, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-inline-size: 20rem;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "PingFang SC", "Noto Sans CJK SC", system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.24;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M0 119.5h120M119.5 0v120' fill='none' stroke='%23958e7f' stroke-width='.5'/%3E%3C/svg%3E");
+    }
+
+    a { color: inherit; }
+
+    a:focus-visible,
+    input:focus-visible {
+      outline: 0.2rem solid var(--focus);
+      outline-offset: 0.22rem;
+    }
+
+    .skip-link {
+      position: fixed;
+      inset-block-start: 0.75rem;
+      inset-inline-start: 0.75rem;
+      z-index: 10;
+      padding: 0.75rem 1rem;
+      background: var(--ink);
+      color: #fff;
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .shell {
+      inline-size: min(74rem, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-block-size: 4.75rem;
+      border-block-end: 1px solid var(--ink);
+      gap: 1rem;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      font-family: "Iowan Old Style", "Songti SC", Baskerville, serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .wordmark span {
+      color: var(--red);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .archive-meta {
+      margin: 0;
+      color: var(--muted);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-align: end;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
+      gap: clamp(2rem, 7vw, 7rem);
+      padding-block: clamp(4rem, 9vw, 8rem) clamp(3rem, 7vw, 6rem);
+      align-items: end;
+    }
+
+    .kicker {
+      margin: 0 0 1rem;
+      color: var(--red);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-inline-size: 12ch;
+      margin: 0;
+      font-family: "Iowan Old Style", "Songti SC", Baskerville, serif;
+      font-size: clamp(3.1rem, 8vw, 7.2rem);
+      font-weight: 700;
+      letter-spacing: -0.075em;
+      line-height: 0.93;
+    }
+
+    .hero-note {
+      border-inline-start: 0.25rem solid var(--blue);
+      padding-inline-start: 1.25rem;
+    }
+
+    .hero-note p {
+      max-inline-size: 35ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+    }
+
+    .hero-note strong { color: var(--ink); }
+
+    .library {
+      border-block-start: 1px solid var(--ink);
+      padding-block: 1.5rem 5rem;
+    }
+
+    .library-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+      align-items: end;
+      gap: 2rem;
+      margin-block-end: 2rem;
+    }
+
+    .section-label {
+      margin: 0;
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-label output {
+      display: inline-block;
+      min-inline-size: 1.5em;
+      color: var(--red);
+      font: inherit;
+    }
+
+    .search-field label {
+      display: block;
+      margin-block-end: 0.5rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .search-field input {
+      inline-size: 100%;
+      min-block-size: 2.75rem;
+      border: 0;
+      border-block-end: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 0.6rem 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .search-field input::placeholder { color: #737b85; }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .resource-card {
+      min-inline-size: 0;
+      background: var(--paper-strong);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .resource-card[hidden] { display: none; }
+
+    .resource-link {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-block-size: 24rem;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .resource-link::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: 0.5rem;
+      block-size: 100%;
+      background: var(--card-accent, var(--blue));
+    }
+
+    .resource-card:hover .resource-link,
+    .resource-link:focus-visible { transform: translateY(-0.3rem); }
+
+    .card-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card-index {
+      color: var(--card-accent, var(--blue));
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .resource-card h2 {
+      max-inline-size: 12ch;
+      margin: 3rem 0 1rem;
+      font-family: "Iowan Old Style", "Songti SC", Baskerville, serif;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      letter-spacing: -0.055em;
+      line-height: 1.08;
+    }
+
+    .card-description {
+      max-inline-size: 37rem;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.85rem;
+      margin: auto 0 0;
+      padding: 2rem 0 0;
+      list-style: none;
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .tag-list li::before {
+      content: "·";
+      margin-inline-end: 0.4rem;
+      color: var(--card-accent, var(--red));
+    }
+
+    .open-cue {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-block-size: 3rem;
+      margin-block-start: 1.5rem;
+      border-block-start: 1px solid var(--line);
+      color: var(--card-accent, var(--blue));
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .open-cue span:last-child { font-size: 1.25rem; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 3rem;
+      border: 1px dashed var(--line);
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state[hidden] { display: none; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      padding-block: 1.5rem 2.5rem;
+      border-block-start: 1px solid var(--ink);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    footer p { margin: 0; }
+
+    @media (max-width: 48rem) {
+      .masthead { align-items: flex-start; padding-block: 1rem; }
+      .archive-meta { max-inline-size: 15ch; }
+      .hero { grid-template-columns: 1fr; gap: 2.5rem; }
+      .library-toolbar { grid-template-columns: 1fr; gap: 1.25rem; }
+      .resource-grid { grid-template-columns: 1fr; }
+      .resource-link { min-block-size: 22rem; }
+    }
+
+    @media (max-width: 24rem) {
+      .shell { inline-size: min(100% - 1.25rem, 74rem); }
+      .wordmark span { display: none; }
+      .archive-meta { font-size: 0.68rem; }
+      h1 { font-size: 3.1rem; }
+      .resource-link { padding: 1.4rem; }
+      .resource-card h2 { margin-block-start: 2.25rem; }
+      footer { flex-direction: column; gap: 0.4rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (prefers-contrast: more) {
+      :root { --muted: #303844; --line: #4f5560; }
+      .resource-card { border-width: 2px; }
+    }
+
+    @media (forced-colors: active) {
+      .resource-link::before { background: CanvasText; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --paper: #111820;
+        --paper-strong: #18222d;
+        --ink: #f2eee3;
+        --muted: #b4bcc5;
+        --line: #56616c;
+        --blue: #78b7ff;
+        --red: #ff8f79;
+        --focus: #8ec8ff;
+        --shadow: 0 1rem 3rem rgba(0, 0, 0, 0.28);
+      }
+
+      body::before { opacity: 0.08; }
+      .search-field input::placeholder { color: #aeb7c0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="shell masthead">
+    <div class="wordmark">面试积累档案 <span>Field Notes</span></div>
+    <p class="archive-meta">PERSONAL STUDY ARCHIVE<br>EST. 2026</p>
+  </header>
+
+  <main id="main">
+    <section class="shell hero" aria-labelledby="page-title">
+      <div>
+        <p class="kicker">Interview Knowledge Base / 个人校招准备</p>
+        <h1 id="page-title">把每次经历，变成下次的底气。</h1>
+      </div>
+      <div class="hero-note">
+        <p><strong>这里不是答案仓库，而是一套持续生长的证据链。</strong> 从真实项目、失败问题与代码细节出发，沉淀可以被追问、可以被验证的面试表达。</p>
+      </div>
+    </section>
+
+    <section class="shell library" aria-labelledby="library-title">
+      <div class="library-toolbar">
+        <p class="section-label" id="library-title">Archive Index / <output id="result-count" aria-live="polite">2</output> 份资料</p>
+        <div class="search-field">
+          <label for="resource-search">按标题、主题或技术关键词筛选</label>
+          <input id="resource-search" type="search" placeholder="例如：SSE、STAR、React…" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="resource-grid" id="resource-grid"></div>
+      <p class="empty-state" id="empty-state" hidden>暂时没有匹配的资料。换一个关键词试试。</p>
+
+      <noscript>
+        <div class="empty-state">
+          此导航页需要 JavaScript 来展示可筛选卡片。你仍可直接打开
+          <a href="folio-19c4e7.html">PHASE 实习面试作战手册</a>
+          和
+          <a href="folio-6b2a51.html">开发面试知识复盘手册</a>。
+        </div>
+      </noscript>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <p>Andy · Personal Study Archive</p>
+    <p>真实经历 → 复盘 → 补齐 → 再验证</p>
+  </footer>
+
+  <script src="resources.js"></script>
+  <script>
+    (() => {
+      const resources = Array.isArray(window.INTERVIEW_RESOURCES) ? window.INTERVIEW_RESOURCES : [];
+      const grid = document.querySelector("#resource-grid");
+      const search = document.querySelector("#resource-search");
+      const resultCount = document.querySelector("#result-count");
+      const emptyState = document.querySelector("#empty-state");
+
+      const makeElement = (name, className, text) => {
+        const element = document.createElement(name);
+        if (className) element.className = className;
+        if (text !== undefined) element.textContent = text;
+        return element;
+      };
+
+      const cards = resources.map((resource) => {
+        const article = makeElement("article", "resource-card");
+        article.style.setProperty("--card-accent", resource.accent === "vermilion" ? "var(--red)" : "var(--blue)");
+        article.dataset.search = [resource.title, resource.type, resource.description, ...resource.tags].join(" ").toLocaleLowerCase("zh-CN");
+
+        const link = makeElement("a", "resource-link");
+        link.href = resource.href;
+        link.setAttribute("aria-label", `打开${resource.title}`);
+
+        const topline = makeElement("div", "card-topline");
+        topline.append(makeElement("span", "card-index", resource.index));
+        topline.append(makeElement("span", "", resource.type));
+
+        const title = makeElement("h2", "", resource.title);
+        const description = makeElement("p", "card-description", resource.description);
+
+        const tags = makeElement("ul", "tag-list");
+        tags.setAttribute("aria-label", "主题标签");
+        resource.tags.forEach((tag) => tags.append(makeElement("li", "", tag)));
+
+        const cue = makeElement("div", "open-cue");
+        cue.append(makeElement("span", "", resource.status));
+        cue.append(makeElement("span", "", "↗"));
+
+        link.append(topline, title, description, tags, cue);
+        article.append(link);
+        grid.append(article);
+        return article;
+      });
+
+      const filterCards = () => {
+        const query = search.value.trim().toLocaleLowerCase("zh-CN");
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const isVisible = !query || card.dataset.search.includes(query);
+          card.hidden = !isVisible;
+          if (isVisible) visibleCount += 1;
+        });
+
+        resultCount.value = String(visibleCount);
+        resultCount.textContent = String(visibleCount);
+        emptyState.hidden = visibleCount !== 0;
+      };
+
+      search.addEventListener("input", filterCards);
+      resultCount.value = String(resources.length);
+      resultCount.textContent = String(resources.length);
+    })();
+  </script>
+</body>
+</html>

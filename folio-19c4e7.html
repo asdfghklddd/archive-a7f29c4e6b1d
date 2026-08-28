@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="zh-Hans" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="PHASE 实习工作复盘、三条 STAR 经历与面试追问回答方案">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2314213d'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='36' fill='%23f2efe5'%3EP%3C/text%3E%3C/svg%3E">
+  <title>PHASE Internship Interview Playbook</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2efe5;
+      --paper-2: #faf8f1;
+      --ink: #14213d;
+      --ink-soft: #4c566f;
+      --line: #b8b09e;
+      --line-strong: #14213d;
+      --orange: #e65335;
+      --teal: #008f83;
+      --gold: #d8a21b;
+      --white: #fffdf7;
+      --shadow: 0 1rem 3rem rgba(20, 33, 61, .10);
+      --radius: 1.25rem;
+      --display: "Iowan Old Style", "Songti SC", "STSong", Georgia, serif;
+      --body: "Avenir Next", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      --mono: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --paper: #101725;
+      --paper-2: #172033;
+      --ink: #f6f0df;
+      --ink-soft: #bac3d5;
+      --line: #44516b;
+      --line-strong: #f6f0df;
+      --white: #1c263b;
+      --orange: #ff7358;
+      --teal: #42d2c5;
+      --gold: #f0bd3e;
+      --shadow: 0 1rem 3rem rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(20, 33, 61, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 33, 61, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 2rem 2rem;
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.72;
+      overflow-wrap: anywhere;
+    }
+
+    a { color: inherit; text-decoration-color: var(--orange); text-decoration-thickness: .12em; text-underline-offset: .18em; }
+    a:hover, a:focus-visible { color: var(--orange); }
+    button, summary, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    :focus-visible { outline: .2rem solid var(--gold); outline-offset: .2rem; }
+    ::selection { background: var(--gold); color: #121212; }
+
+    .skip-link {
+      position: fixed;
+      inset-block-start: .75rem;
+      inset-inline-start: .75rem;
+      z-index: 100;
+      transform: translateY(-180%);
+      padding: .7rem 1rem;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 999px;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .progress { position: fixed; inset: 0 0 auto; z-index: 50; block-size: .3rem; background: transparent; }
+    .progress span { display: block; block-size: 100%; inline-size: 0; background: linear-gradient(90deg, var(--orange), var(--gold), var(--teal)); }
+
+    .topbar {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .75rem clamp(1rem, 4vw, 3rem);
+      border-block-end: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      backdrop-filter: blur(1rem);
+    }
+    .brand { display: flex; align-items: center; gap: .75rem; font-weight: 800; letter-spacing: .04em; }
+    .brand-mark { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; background: var(--ink); color: var(--paper); border-radius: 50%; font-family: var(--display); }
+    .toolbar { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .tool-button {
+      min-block-size: 2.75rem;
+      padding-inline: .9rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: var(--paper-2);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .18s ease, background .18s ease, color .18s ease;
+    }
+    .tool-button:hover, .tool-button:focus-visible { transform: translateY(-2px); background: var(--ink); color: var(--paper); }
+
+    .hero {
+      position: relative;
+      min-block-size: min(48rem, 86vh);
+      display: grid;
+      align-content: end;
+      padding: clamp(4.5rem, 9vw, 8.5rem) clamp(1rem, 6vw, 6rem) clamp(2.5rem, 6vw, 5rem);
+      border-block-end: 2px solid var(--line-strong);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "STAR";
+      position: absolute;
+      inset-block-start: clamp(2rem, 7vw, 5rem);
+      inset-inline-end: clamp(-2rem, 2vw, 2rem);
+      color: transparent;
+      -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 18%, transparent);
+      font-family: var(--display);
+      font-size: clamp(9rem, 28vw, 28rem);
+      font-weight: 900;
+      line-height: .7;
+      letter-spacing: -.1em;
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-inline-size: 80rem; }
+    .kicker { margin: 0 0 1rem; color: var(--orange); font-size: .8rem; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
+    h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; }
+    h1 { max-inline-size: 13ch; margin: 0; font-size: clamp(3.2rem, 8vw, 8.5rem); line-height: .92; letter-spacing: -.055em; }
+    .hero-deck { max-inline-size: 48rem; margin: 1.8rem 0 0; color: var(--ink-soft); font-size: clamp(1.05rem, 2vw, 1.4rem); }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: .75rem; margin-block-start: 2rem; }
+    .hero-meta span { padding: .45rem .75rem; border: 1px solid var(--line-strong); background: var(--paper-2); font-size: .82rem; font-weight: 800; }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: var(--ink);
+      color: var(--paper);
+      border-block-end: 2px solid var(--line-strong);
+    }
+    .stat { padding: clamp(1.2rem, 3vw, 2.4rem); border-inline-end: 1px solid color-mix(in srgb, var(--paper) 28%, transparent); border-block-end: 1px solid color-mix(in srgb, var(--paper) 28%, transparent); }
+    .stat strong { display: block; font-family: var(--display); font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1; font-variant-numeric: tabular-nums; }
+    .stat span { color: color-mix(in srgb, var(--paper) 72%, transparent); font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+    .layout { max-inline-size: 96rem; margin-inline: auto; padding: clamp(1rem, 4vw, 4rem); }
+    .section-grid { display: grid; gap: 2rem; }
+    .sidebar { display: none; }
+    .content { min-inline-size: 0; }
+
+    .nav-card { position: sticky; inset-block-start: 5.5rem; padding: 1rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--paper-2) 94%, transparent); box-shadow: var(--shadow); }
+    .nav-card p { margin: 0 0 .75rem; color: var(--ink-soft); font-size: .72rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .nav-card a { display: flex; align-items: center; min-block-size: 2.8rem; padding: .55rem .65rem; border-block-start: 1px solid var(--line); text-decoration: none; font-size: .88rem; font-weight: 750; }
+    .nav-card a::before { content: ""; inline-size: .55rem; block-size: .55rem; margin-inline-end: .65rem; border-radius: 50%; background: var(--line); }
+    .nav-card a[href="#star-1"]::before { background: var(--orange); }
+    .nav-card a[href="#star-2"]::before { background: var(--teal); }
+    .nav-card a[href="#star-3"]::before { background: var(--gold); }
+
+    .overview-card, .truth-card, .cross-card { margin-block-end: 2rem; border: 2px solid var(--line-strong); background: var(--paper-2); box-shadow: var(--shadow); }
+    .section-heading { display: grid; gap: .5rem; padding: clamp(1.4rem, 4vw, 2.6rem); border-block-end: 1px solid var(--line); }
+    .section-heading h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.8rem); line-height: 1; }
+    .eyebrow { margin: 0; color: var(--ink-soft); font-family: var(--body); font-size: .72rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    .major-disclosure > summary, .overview-card > summary, .cross-card > summary {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      min-block-size: 4.25rem;
+      padding: 1rem clamp(1rem, 3vw, 1.7rem);
+      border-block-start: 1px solid var(--line);
+      cursor: pointer;
+      font-weight: 850;
+    }
+    .overview-card > summary, .cross-card > summary { border-block-start: 0; font-family: var(--display); font-size: clamp(1.3rem, 2vw, 1.8rem); }
+    .summary-note { color: var(--ink-soft); font-size: .75rem; font-weight: 600; }
+    .toggle-mark { position: relative; inline-size: 1.2rem; block-size: 1.2rem; flex: 0 0 auto; }
+    .toggle-mark::before, .toggle-mark::after { content: ""; position: absolute; inset: 50% auto auto 50%; inline-size: 1rem; block-size: .13rem; background: currentColor; transform: translate(-50%, -50%); transition: transform .2s ease; }
+    .toggle-mark::after { transform: translate(-50%, -50%) rotate(90deg); }
+    details[open] > summary .toggle-mark::after { transform: translate(-50%, -50%) rotate(0deg); }
+    .disclosure-body, .overview-body, .cross-body { padding: clamp(1.25rem, 4vw, 2.5rem); border-block-start: 1px solid var(--line); }
+
+    .prose { max-inline-size: 76ch; }
+    .prose h2 { margin: 2.4rem 0 .8rem; font-size: clamp(1.7rem, 3vw, 2.5rem); }
+    .prose h3 { margin: 2rem 0 .6rem; font-size: clamp(1.35rem, 2vw, 1.8rem); }
+    .prose h4 { margin: 1.5rem 0 .45rem; font-size: 1.18rem; }
+    .prose p { margin: .85rem 0; }
+    .prose strong { color: var(--ink); }
+    .prose code { padding: .12em .35em; border: 1px solid var(--line); border-radius: .25rem; background: color-mix(in srgb, var(--paper) 75%, var(--teal) 5%); font-family: var(--mono); font-size: .88em; }
+    .prose ul { padding-inline-start: 1.25rem; }
+    .prose li + li { margin-block-start: .45rem; }
+    blockquote { margin: 1.25rem 0; padding: 1.2rem 1.35rem; border-inline-start: .35rem solid var(--orange); background: color-mix(in srgb, var(--orange) 8%, var(--paper-2)); font-family: var(--display); font-size: 1.08rem; }
+    blockquote p { margin: 0 !important; }
+    .table-wrap { max-inline-size: 100%; overflow-x: auto; border: 1px solid var(--line); }
+    table { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    th, td { padding: .75rem .85rem; border-block-end: 1px solid var(--line); text-align: start; white-space: nowrap; }
+    th { background: var(--ink); color: var(--paper); font-size: .78rem; letter-spacing: .05em; }
+
+    .star-card { --accent: var(--orange); margin-block: 3rem; border: 2px solid var(--line-strong); background: var(--paper-2); box-shadow: var(--shadow); scroll-margin-top: 6rem; }
+    .star-2 { --accent: var(--teal); }
+    .star-3 { --accent: var(--gold); }
+    .star-header { position: relative; display: grid; grid-template-columns: auto 1fr; gap: clamp(1rem, 4vw, 2.5rem); align-items: end; min-block-size: 16rem; padding: clamp(1.3rem, 4vw, 3rem); color: #fffdf7; background: var(--ink); overflow: hidden; }
+    .star-header::after { content: ""; position: absolute; inset: auto -8% -55% auto; inline-size: 20rem; aspect-ratio: 1; border: 5rem solid color-mix(in srgb, var(--accent) 70%, transparent); border-radius: 50%; opacity: .8; }
+    .star-number { position: relative; z-index: 1; color: var(--accent); font-family: var(--display); font-size: clamp(4.5rem, 11vw, 10rem); font-weight: 900; line-height: .72; letter-spacing: -.08em; }
+    .star-heading { position: relative; z-index: 1; }
+    .star-heading .eyebrow { color: var(--accent); }
+    .star-heading h2 { max-inline-size: 18ch; margin: .55rem 0 1rem; color: #fffdf7; font-size: clamp(2rem, 5vw, 4.7rem); line-height: .98; letter-spacing: -.035em; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+    .tag-row span { padding: .32rem .6rem; border: 1px solid color-mix(in srgb, var(--accent) 70%, #fff); color: #fffdf7; font-size: .74rem; font-weight: 800; }
+    .star-card .major-disclosure > summary { border-block-start-color: var(--line); }
+    .star-card .major-disclosure[open] > summary { color: var(--accent); }
+
+    .transcript { max-inline-size: 68ch; font-family: var(--display); font-size: clamp(1.05rem, 1.5vw, 1.22rem); }
+    .transcript p:first-child::first-letter { float: inline-start; margin: .06em .12em 0 0; color: var(--accent); font-size: 3.5em; font-weight: 800; line-height: .8; }
+
+    .qa-section { padding: clamp(1.2rem, 4vw, 2.5rem); border-block-start: 2px solid var(--line-strong); }
+    .qa-title-row { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-block-end: 1rem; }
+    .qa-title-row h3 { margin: .2rem 0 0; font-size: clamp(2rem, 4vw, 3.2rem); }
+    .question-count { padding: .35rem .55rem; background: var(--accent); color: #101725; font-family: var(--mono); font-size: .72rem; font-weight: 900; }
+    .qa-intro { color: var(--ink-soft); font-size: .92rem; }
+    .qa-list { margin-block-start: 1.2rem; border-block-start: 1px solid var(--line); }
+    .qa-item { border-block-end: 1px solid var(--line); }
+    .qa-item > summary { display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: center; gap: .8rem; min-block-size: 4rem; padding: .75rem .25rem; cursor: pointer; font-weight: 800; }
+    .qa-item[open] > summary { color: var(--accent); }
+    .qa-index { color: var(--ink-soft); font-family: var(--mono); font-size: .72rem; }
+    .qa-answer { padding: 0 1rem 1.5rem 3.4rem; }
+    .qa-answer > p:first-child { margin-block-start: 0; }
+
+    .truth-card { border-color: var(--orange); }
+    .truth-banner { display: grid; gap: .5rem; padding: clamp(1.5rem, 4vw, 2.7rem); background: var(--orange); color: #fffdf7; }
+    .truth-banner h2 { margin: 0; color: #fffdf7; font-size: clamp(2rem, 4vw, 3.5rem); }
+    .truth-banner p { margin: 0; max-inline-size: 52rem; }
+    .truth-body { padding: clamp(1.2rem, 4vw, 2.5rem); }
+
+    .footer { padding: 3rem clamp(1rem, 5vw, 4rem); border-block-start: 2px solid var(--line-strong); background: var(--ink); color: var(--paper); }
+    .footer-inner { max-inline-size: 90rem; margin-inline: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+    .footer p { margin: 0; color: color-mix(in srgb, var(--paper) 72%, transparent); }
+    .status { position: fixed; inset: auto 1rem 1rem auto; z-index: 60; max-inline-size: min(26rem, calc(100vw - 2rem)); padding: .75rem 1rem; border: 1px solid var(--line-strong); background: var(--ink); color: var(--paper); box-shadow: var(--shadow); opacity: 0; transform: translateY(1rem); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+    .status.show { opacity: 1; transform: translateY(0); }
+
+    @media (min-width: 40rem) {
+      .stat-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .stat { border-block-end: 0; }
+    }
+    @media (min-width: 68rem) {
+      .section-grid { grid-template-columns: 15rem minmax(0, 1fr); align-items: start; }
+      .sidebar { display: block; }
+    }
+    @media (max-width: 44rem) {
+      .topbar { align-items: flex-start; }
+      .brand span:last-child { display: none; }
+      .tool-button { min-inline-size: 2.75rem; padding-inline: .7rem; }
+      .tool-button .wide-label { display: none; }
+      .hero { min-block-size: 38rem; }
+      .star-header { grid-template-columns: 1fr; align-content: end; }
+      .star-number { font-size: 5.5rem; }
+      .summary-note { display: none; }
+      .major-disclosure > summary, .overview-card > summary, .cross-card > summary { grid-template-columns: 1fr auto; }
+      .qa-answer { padding-inline: .25rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+    @media (prefers-contrast: more) {
+      :root { --line: var(--ink); }
+      button, details, .overview-card, .star-card, .truth-card { border-width: 2px; }
+    }
+    @media (forced-colors: active) {
+      .star-header, .stat-strip, .truth-banner { forced-color-adjust: auto; }
+      .tag-row span, .question-count { border: 1px solid ButtonText; }
+    }
+    @media print {
+      .topbar, .sidebar, .progress, .status { display: none !important; }
+      body { background: #fff; color: #000; font-size: 10pt; }
+      .hero { min-block-size: auto; padding: 2rem 0; }
+      .hero::before { display: none; }
+      .stat-strip { color: #000; background: #fff; border: 1px solid #000; }
+      .layout { max-inline-size: none; padding: 1rem 0; }
+      .section-grid { display: block; }
+      details > summary { display: none !important; }
+      details > *:not(summary) { display: block !important; }
+      .overview-card, .star-card, .truth-card, .cross-card { break-inside: avoid-page; box-shadow: none; }
+      .qa-item { break-inside: avoid-page; }
+      .star-header { min-block-size: auto; color: #000; background: #fff; border-block-end: 2px solid #000; }
+      .star-heading h2 { color: #000; }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">P</span><span>PHASE · INTERVIEW PLAYBOOK</span></div>
+    <div class="toolbar" aria-label="页面工具">
+      <button class="tool-button" id="expand-all" type="button"><span class="wide-label">全部</span>展开</button>
+      <button class="tool-button" id="collapse-all" type="button"><span class="wide-label">全部</span>收起</button>
+      <button class="tool-button" id="theme-toggle" type="button" aria-pressed="false">深色</button>
+      <button class="tool-button" id="print-page" type="button">打印</button>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-inner">
+      <p class="kicker">Evidence-backed interview dossier · 2026</p>
+      <h1 id="page-title">PHASE 实习面试作战手册</h1>
+      <p class="hero-deck">三条经得起技术追问的 STAR 经历，覆盖实时系统、安全与弱网、失败回滚与架构重构。所有结果严格区分测试、合并、部署和线上指标。</p>
+      <div class="hero-meta" aria-label="技术范围">
+        <span>SwiftUI</span><span>React + Taro</span><span>Hono + TypeScript</span><span>Supabase</span><span>SSE</span><span>AI Agent</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stat-strip" aria-label="GitHub 工作量概览">
+    <div class="stat"><strong>54</strong><span>发起 PR</span></div>
+    <div class="stat"><strong>42</strong><span>已合并</span></div>
+    <div class="stat"><strong>71</strong><span>默认分支归属 Commit</span></div>
+    <div class="stat"><strong>3</strong><span>核心 STAR</span></div>
+  </section>
+
+  <main id="main-content" class="layout">
+    <div class="section-grid">
+      <aside class="sidebar">
+        <nav class="nav-card" aria-label="章节导航">
+          <p>Case index</p>
+          <a href="#overview">工作复盘</a>
+          <a href="#star-1">SSE 与异步任务</a>
+          <a href="#star-2">安全与弱网</a>
+          <a href="#star-3">回滚与重构</a>
+          <a href="#truth-boundary">表达边界</a>
+          <a href="#cross-questions">横向追问</a>
+        </nav>
+      </aside>
+
+      <div class="content">
+        <details class="overview-card" id="overview" data-section>
+          <summary><span>完整实习工作复盘</span><span class="summary-note">项目主线 · 其他工作 · 问题与收获</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="overview-body prose"><p>材料来自化名 Andy 在 <code>phase-ios-app</code>、<code>phase</code>、<code>phase-frontend</code> 三个项目仓库中的 PR、默认分支 commit、分支、评审、CI 结果和关键代码 diff。材料覆盖多个开发阶段，但不等同于劳动关系上的准确实习起止日期。</p>
+<h2>一句话定位</h2>
+<p>这段经历更适合描述为移动端与 AI 后端的全栈产品工程实习。工作横跨 SwiftUI iOS、React 与 Taro 微信小程序、Hono TypeScript 后端、Supabase PostgreSQL、SSE、异步视觉任务和 CI。最有说服力的部分来自线上产品常见的边界问题，包括流式连接、弱网、鉴权、数据删除、商品事实来源和多人协作中的发布权限。</p>
+<h2>GitHub 工作量概览</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">仓库</th><th scope="col">发起 PR</th><th scope="col">已合并</th><th scope="col">开放中</th><th scope="col">关闭未合并</th><th scope="col">默认分支可归属 commit</th></tr></thead><tbody><tr><td><code>phase-ios-app</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td></tr><tr><td><code>phase</code></td><td>42</td><td>32</td><td>4</td><td>6</td><td>27</td></tr><tr><td><code>phase-frontend</code></td><td>11</td><td>9</td><td>1</td><td>1</td><td>43</td></tr><tr><td>合计</td><td>54</td><td>42</td><td>5</td><td>7</td><td>71</td></tr></tbody></table></div>
+<p>这些数字只能说明活动范围。集成 PR、merge commit 和重复演进会造成重复统计，因此不应把总增删行数当作产出。面试时更适合讲单个问题的范围、验证和结果。</p>
+<h2>工作主线</h2>
+<h3>iOS 与 AI 实时链路</h3>
+<p>iOS 仓库的 <a href="https://github.com/phasebook-AI/phase-ios-app/pull/1" target="_blank" rel="noreferrer">PR 1</a> 把旧 <code>WebSocketManager</code> 替换为 <code>ChatSSEClient</code>、<code>UserEventsSSEClient</code> 和独立 <code>SSEParser</code>，接入 <code>/ios/api/chat</code> 与 <code>/ios/api/events</code>，同时调整登录超时、上传结果和消息解码。该 PR 涉及 38 个文件，新增 800 行、删除 1178 行，并加入 SSE、视觉结果和请求契约测试。构建和单元测试通过，UI test runner 在模拟器启动阶段失败，因此不能把 UI 测试写成成功。</p>
+<p>后端同期经历了明显的拆分过程。<a href="https://github.com/phasebook-AI/phase/pull/11" target="_blank" rel="noreferrer">PR 11</a> 把 Gemini、聊天和异步上传混在 34 个文件中，评审发现消息截断可能破坏 tool call 与 tool result 配对，内存中的 job status 也缺少可靠清理。你主动关闭了该 PR，并写明改用更小的模块化 PR。随后 <a href="https://github.com/phasebook-AI/phase/pull/13" target="_blank" rel="noreferrer">PR 13</a>、<a href="https://github.com/phasebook-AI/phase/pull/15" target="_blank" rel="noreferrer">PR 15</a>、<a href="https://github.com/phasebook-AI/phase/pull/16" target="_blank" rel="noreferrer">PR 16</a> 分别处理完整 turn 截断、带 TTL 与容量上限的异步任务状态、SSE 首帧与早期 abort。三项都通过 CI 和评审。</p>
+<p><a href="https://github.com/phasebook-AI/phase/pull/23" target="_blank" rel="noreferrer">PR 23</a> 继续把视觉上传做成可观测、可恢复的异步链路。评审曾指出一次普通产品扫描可能清空用户全部库存，外键失败还会留下部分删除状态。修复后，只有显式 <code>replace_existing=true</code> 的 onboarding 重扫才会清理，而且清理发生在确认识别到商品之后。数据库通过单个 PL/pgSQL RPC 原子处理，先解除 routine 引用，只删除 <code>source='scan'</code> 的库存，并限制函数权限。复审确认 40 个相关测试通过，完整套件达到 958 个通过、5 个跳过。</p>
+<h3>微信小程序质量、安全与弱网</h3>
+<p><a href="https://github.com/phasebook-AI/phase-frontend/pull/16" target="_blank" rel="noreferrer">前端 PR 16</a> 来自一次完整前端审查，覆盖冷启动深链、八个 care 页面滚动容器、图片选择取消、episode 双击创建、brief 并发生成和搜索响应竞争。27 个文件改动后，687 个测试通过，微信小程序 CI 构建成功。</p>
+<p>随后你复查了自己的深链方案，发现 product 页把品牌、商品名、推荐理由、图片和购买链接都直接信任 URL 参数。新加入的冷启动深链和转发能力会放大伪造商品卡与钓鱼链接的传播。<a href="https://github.com/phasebook-AI/phase-frontend/pull/18" target="_blank" rel="noreferrer">PR 18</a> 的描述明确承认风险由前一个 PR 放大，并采取三层处理，移除 product 冷启动入口、移除转发、在落地页限制 HTTPS。129 个测试文件、692 个测试和生产构建均通过。</p>
+<p><a href="https://github.com/phasebook-AI/phase-frontend/pull/19" target="_blank" rel="noreferrer">PR 19</a> 处理五类弱网问题。非 2xx SSE 响应不再静默结束，中断的聊天保留已收到文本，视觉任务轮询允许两次连续瞬时故障，401、403、404 立即失败，微信原生 <code>{ errMsg }</code> 也能被正确分类，并为鉴权、业务请求和聊天首包设置不同超时。新增 19 个用例，撤销修复会使其中 13 个失败。最终 129 个测试文件、706 个测试、TypeScript 检查和生产 API 构建通过。</p>
+<p><a href="https://github.com/phasebook-AI/phase-frontend/pull/20" target="_blank" rel="noreferrer">PR 20</a> 又把 catalog tool result 设为商品卡的事实来源，避免依赖 LLM 正文精确复述商品名。该 PR 只改两个文件，721 个测试通过。这几项工作共同说明你能从 UI 症状追到传输层、状态机和数据可信边界。</p>
+<h3>后端领域模型与产品事实来源</h3>
+<p>商品目录工作包含一次很有价值的错误。<a href="https://github.com/phasebook-AI/phase/pull/47" target="_blank" rel="noreferrer">PR 47</a> 在共享后端加入 <code>PRODUCT_CATALOG_SCOPE</code> 和 RéVive 品牌过滤，并被小程序工作流越权合并。后端评审指出，两套部署通过各自 Supabase 数据源隔离商品目录，共享代码中的品牌特判会形成重复约束，且难以覆盖所有入口。</p>
+<p>你随后提交并合并 <a href="https://github.com/phasebook-AI/phase/pull/48" target="_blank" rel="noreferrer">PR 48</a> 回滚全部 12 个文件，并在原 PR 留下权限边界说明。第二天，方案被重建为三个有依赖顺序的 stacked PR。<a href="https://github.com/phasebook-AI/phase/pull/49" target="_blank" rel="noreferrer">PR 49</a> 增加可空的 catalog 外键，<a href="https://github.com/phasebook-AI/phase/pull/50" target="_blank" rel="noreferrer">PR 50</a> 建立 active catalog 边界并约束 Agent 工具，<a href="https://github.com/phasebook-AI/phase/pull/51" target="_blank" rel="noreferrer">PR 51</a> 把 onboarding、计划、推荐、皮肤诊断、库存和价格比较接到权威目录。三个 PR 全部合并并通过 CI。PR 50 有 8 个聚焦测试文件、63 个测试，PR 51 通过完整测试和构建。</p>
+<p>这个过程体现的收获很具体。环境隔离应优先由数据边界保证，共享业务代码保持通用。涉及数据库、Agent 与 HTTP 路由的改动可以按 schema、domain tool、server flow 分层提交。发布权限和技术正确性同样属于工程质量。</p>
+<h2>其他可确认的工作</h2>
+<ul><li>国际化方面，<a href="https://github.com/phasebook-AI/phase/pull/24" target="_blank" rel="noreferrer">后端 PR 24</a> 把 <code>Accept-Language</code> 传入 iOS 上传和生成内容流程，覆盖皮肤分析、兼容性、推荐、daily plan 和商品展示。28 个文件完成修改并通过测试、构建和类型检查。<a href="https://github.com/phasebook-AI/phase/pull/27" target="_blank" rel="noreferrer">PR 27</a> 为 community feed 增加翻译缓存，评审推动你修正语言优先级、模型返回原文时的重复翻译、热路径阻塞和无 service role key 时的静默写入失败。</li><li>社区与可观测性方面，<a href="https://github.com/phasebook-AI/phase/pull/29" target="_blank" rel="noreferrer">PR 29</a> 把 8788 环境的发帖、图片、点赞、收藏、评论和搜索能力按当前 main 重新移植。<a href="https://github.com/phasebook-AI/phase/pull/35" target="_blank" rel="noreferrer">PR 35</a> 为聊天、视觉上传、daily plan 和价格比较加入脱敏后的 PostHog 服务端事件，1031 个测试通过。<a href="https://github.com/phasebook-AI/phase/pull/43" target="_blank" rel="noreferrer">PR 43</a> 为 SSE 增加 submitted、thinking、tool、writing 等阶段状态和 <code>client_turn_id</code>。</li><li>皮肤评分方面，<a href="https://github.com/phasebook-AI/phase/pull/54" target="_blank" rel="noreferrer">PR 54</a> 把 evidence-based skin scoring V1 接入异步上传、数据库持久化和下游 plan 与 agent context。它校验原图 SHA-256，区分 scored 与 <code>retake_required</code>，并选择最新可用 snapshot。169 个测试文件、1182 个测试通过。PR 明确未执行阿里云部署或 production migration。</li><li>日志删除方面，<a href="https://github.com/phasebook-AI/phase/pull/71" target="_blank" rel="noreferrer">后端 PR 71</a> 修复 <code>skin_analysis</code> 删除受到外键限制、API 误报删除成功和删除白名单竞争条件等问题。评审后又增加 UUID 规范化、DELETE 内重复白名单和诊断 request id。完整 Vitest 有 2204 个通过、87 个跳过，另有 2 个与当前 Node warning 有关的既有失败。<a href="https://github.com/phasebook-AI/phase-frontend/pull/24" target="_blank" rel="noreferrer">前端 PR 24</a> 在 MiniApp 和当时仍存在的 Web 端过滤内部事件，同时保留后端原始分页 cursor。MiniApp 976 个测试、Web 238 个测试及两端生产构建通过。</li></ul>
+<h2>遇到的主要问题</h2>
+<h3>范围过大导致评审困难</h3>
+<p>早期后端 <a href="https://github.com/phasebook-AI/phase/pull/10" target="_blank" rel="noreferrer">PR 10</a>、PR 11 和 <a href="https://github.com/phasebook-AI/phase/pull/12" target="_blank" rel="noreferrer">PR 12</a> 都是大范围同步。PR 10 因重复类型声明无法构建，PR 11 收到两个阻塞问题，PR 12 达到 75 个文件。之后你把同一批工作拆成 2 到 5 个文件的 feature PR，评审和验证明显更聚焦。后端 42 个 PR 中有 25 个收到外部评审，9 个经历 changes requested，22 个最终获得 approval。</p>
+<h3>分支纪律仍有不一致</h3>
+<p>后端大多使用一项工作对应一个分支。商品目录还采用了清楚的三层 stacked PR。前端的 <code>feat/miniapp-andy</code> 被重复用于 4 个 PR，曾产生 335 个文件和 261 个文件的超大集成 diff。2026 年 8 月抽查的 8 个默认分支 commit 没有 GitHub PR 关联，其中 conversation-first 后端改动在当天被 revert。面试时不必回避，可以说明自己后来更重视短生命周期分支、明确 base、按依赖顺序合并和禁止未经授权直推共享 main。</p>
+<h3>合并、部署与客户端可用并不等价</h3>
+<p>当前仍有 5 个开放 PR，包括后端 <a href="https://github.com/phasebook-AI/phase/pull/84" target="_blank" rel="noreferrer">PR 84</a>、<a href="https://github.com/phasebook-AI/phase/pull/95" target="_blank" rel="noreferrer">PR 95</a>、<a href="https://github.com/phasebook-AI/phase/pull/105" target="_blank" rel="noreferrer">PR 105</a>、<a href="https://github.com/phasebook-AI/phase/pull/106" target="_blank" rel="noreferrer">PR 106</a>，以及前端 <a href="https://github.com/phasebook-AI/phase-frontend/pull/17" target="_blank" rel="noreferrer">PR 17</a>。其中 care guide 的 <a href="https://github.com/phasebook-AI/phase/pull/103" target="_blank" rel="noreferrer">PR 103</a> 虽已合并，PR 说明也明确写着 MiniApp 必须改为 POST 新模板才会命中该路由，后续 v2 契约仍在 PR 106 中。面试时应说合并和 CI 通过，不要把这些状态扩大成已经部署或已经被用户使用。</p></div>
+        </details>
+
+
+      <article class="star-card star-1" id="star-1" data-section>
+        <header class="star-header">
+          <div class="star-number" aria-hidden="true">01</div>
+          <div class="star-heading">
+            <p class="eyebrow">STAR CASE 1</p>
+            <h2>iOS 与后端 SSE 和异步视觉任务</h2>
+            <div class="tag-row"><span>复杂技术</span><span>跨端协作</span><span>Code Review</span></div>
+          </div>
+        </header>
+        <details class="major-disclosure" open>
+          <summary><span>完整 STAR 框架</span><span class="summary-note">情境 · 任务 · 行动 · 结果</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose"><p>适合回答复杂技术问题、跨端协作、如何处理 code review。</p>
+<p><strong>S 情境</strong></p>
+<p>iOS 客户端还依赖旧 WebSocket，而当前后端已经采用 HTTP POST 加 SSE。聊天首帧、用户事件、图片上传结果和 abort 的契约不一致。最初的后端同步 PR 范围太大，评审又发现上下文截断会破坏工具调用配对，异步任务状态可能长期留在内存。</p>
+<p><strong>T 任务</strong></p>
+<p>把 iOS 与后端实时链路对齐，同时保证长对话、早期取消和异步视觉任务在失败场景下仍有清楚状态，并把改动拆成可评审单元。</p>
+<p><strong>A 行动</strong></p>
+<p>在 iOS 中新增聊天 SSE、用户事件 SSE 和独立 parser，使用 <code>AsyncThrowingStream</code> 处理流式响应，补上非 2xx、token、abort 和视觉事件测试。后端关闭混合范围 PR，把问题拆成完整 turn 截断、带 TTL 与容量上限的 job status、可取消的早期 <code>turn_start</code>。视觉上传又加入阶段耗时、显式替换参数和原子数据库清理。针对 review 指出的全量库存误删，默认扫描保持 additive，空识别不会触发清理，RPC 只删除 scan 来源的数据并先处理外键。</p>
+<p><strong>R 结果</strong></p>
+<p>iOS PR 1 与后端 PR 13、15、16、23 均合并。iOS 构建和单元测试通过。后端 PR 16 在修复早期 abort 后完成 804 个测试，PR 23 的相关测试 40 个全过，完整套件 958 个通过、5 个跳过。结果只证明代码合并和验证完成，不能声称生产指标改善。</p></div>
+        </details>
+        <details class="major-disclosure transcript-disclosure">
+          <summary><span>九十秒口述稿</span><span class="summary-note">适合第一轮完整回答</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose transcript"><p>我负责过一次 iOS 与 AI 后端实时链路的对齐。iOS 当时还在使用 WebSocket，后端已经切到 HTTP POST 加 SSE，聊天、用户事件和异步图片任务的状态不一致。我先在 Swift 端拆出聊天 SSE、用户事件 SSE 和 parser，用异步流统一处理数据与取消。后端第一版改动过于集中，review 指出两个真实风险，长对话可能截断在 tool call 中间，job status 也可能一直占内存。我关闭了混合 PR，拆成几个独立分支，分别按完整 turn 截断、给任务状态加 TTL 和容量上限、让首帧之后立即可 abort。后来视觉上传 review 又发现普通扫描可能误删全部库存，我把替换改成显式参数，并用一个受权限保护的数据库函数原子清理 scan 来源数据。相关 PR 最终都合并，关键测试从 40 个专项用例到 958 个完整套件都通过。这件事让我形成了一个习惯，实时系统要同时设计成功路径、取消路径和持久化边界。</p></div>
+        </details>
+        <section class="qa-section" aria-labelledby="star-1-qa-title">
+          <div class="qa-title-row">
+            <div>
+              <p class="eyebrow">FOLLOW-UP DEFENSE</p>
+              <h3 id="star-1-qa-title">面试追问</h3>
+            </div>
+            <span class="question-count">10 questions</span>
+          </div>
+          <div class="qa-intro prose"><p>主要证据来自 <a href="https://github.com/phasebook-AI/phase-ios-app/pull/1" target="_blank" rel="noreferrer">iOS PR 1</a>、<a href="https://github.com/phasebook-AI/phase/pull/11" target="_blank" rel="noreferrer">后端 PR 11</a>、<a href="https://github.com/phasebook-AI/phase/pull/13" target="_blank" rel="noreferrer">PR 13</a>、<a href="https://github.com/phasebook-AI/phase/pull/15" target="_blank" rel="noreferrer">PR 15</a>、<a href="https://github.com/phasebook-AI/phase/pull/16" target="_blank" rel="noreferrer">PR 16</a> 和 <a href="https://github.com/phasebook-AI/phase/pull/23" target="_blank" rel="noreferrer">PR 23</a>。</p></div>
+          <div class="qa-list"><details class="qa-item">
+              <summary><span class="qa-index">01</span><span>追问一 你具体是如何解决的</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我先按协议和生命周期拆问题。聊天是一次 POST 对应一条 SSE 响应流，用户事件是应用级的长期 GET 流，视觉上传又是创建 job 后轮询状态。我在 iOS 里把这三种生命周期分开，新增聊天 SSE client、用户事件 SSE client 和独立 parser，用 <code>AsyncThrowingStream</code> 处理聊天结果和取消。后端则把原来混在一个 PR 里的问题拆开，分别处理完整 turn 截断、job status 清理、首帧和早期 abort。视觉扫描涉及删除时，我又把替换动作改成显式 <code>replace_existing</code>，空识别先返回，真正清理通过单个数据库函数原子执行。</p></blockquote>
+<p>如果面试官继续问代码位置，可以补充</p>
+<ul><li>iOS 使用 <code>ChatSSEClient</code>、<code>UserEventsSSEClient</code>、<code>SSEParser</code> 和 <code>ChatViewModel</code>。</li><li>聊天请求走 <code>/ios/api/chat</code>，长期事件走 <code>/ios/api/events</code>，取消走 <code>/api/chat/abort</code>。</li><li>产品扫描默认只增量写入。只有 onboarding 明确要求替换时才调用清理函数。</li></ul></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">02</span><span>追问二 为什么选择 SSE，不继续使用 WebSocket</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>这个选择来自服务端已有契约。用户发送一条消息后，服务端按顺序返回 <code>turn_start</code>、文本增量、工具状态和 <code>turn_end</code>，单个请求天然是一条单向响应流。SSE 可以继续使用普通 HTTP 鉴权、状态码、代理和超时行为，客户端也容易把一次聊天与一次取消绑定。应用级后台事件仍然使用独立的 SSE 连接。WebSocket 适合高频双向通信，但这个场景的客户端上行只有一次请求，所以继续保留 WebSocket 会让两套协议长期并存。</p></blockquote>
+<p>追问如果变成 SSE 是否总比 WebSocket 好，可以回答</p>
+<blockquote><p>没有通用优劣。若产品需要双方持续高频发送、低延迟协作或二进制消息，我会重新评估 WebSocket。这里选择 SSE 是为了匹配现有服务端行为并减少协议分叉。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">03</span><span>追问三 为什么要把聊天流和用户事件流分开</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>两者的生命周期不同。聊天流属于一条用户请求，可以结束、失败和 abort。用户事件流跟随登录会话，用来接收视觉任务完成等后台事件。如果共用一个连接，一条聊天的取消或错误可能影响后台事件，重连策略也会混在一起。分开以后，两边可以独立鉴权、取消和恢复，状态机更容易测试。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">04</span><span>追问四 什么叫按完整 turn 截断上下文</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>Agent 历史里一轮对话可能包含用户消息、assistant 发起的 tool call、tool result 和最终回答。如果直接取最后 N 条 message，切点可能落在 tool result 前面，模型会看到孤立结果，或者看到一个没有结果的 tool call。我的处理方向是先识别完整用户轮次，只在轮次边界截断，让工具调用保持配对。长期方案还可以按 token 预算选择完整轮次，但边界约束仍要保留。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">05</span><span>追问五 为什么 job status 需要 TTL 和容量上限</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>job status 当时保存在进程内存。如果只在客户端查询时清理，已经通过 SSE 收到结果或者从不轮询的任务就可能一直留下。TTL 解决过期问题，容量上限避免异常流量持续占用内存。这个方案适合当时的单进程状态查询，但它不能解决多实例共享和进程重启。规模扩大后，我会把 job 状态放进持久化存储，并继续保留过期策略。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">06</span><span>追问六 为什么 <code>replace_existing</code> 要显式传入</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>普通产品扫描通常应该追加或更新商品，只有 onboarding 重扫才有替换语义。默认清空会把一个少量商品照片解释成用户要重建全部库存，失败代价很高。显式参数让破坏性动作只能由明确场景触发。代码还把清理放在识别出商品之后，所以模糊照片不会造成先删后空。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">07</span><span>追问七 为什么用数据库函数原子清理</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>原方案连续执行多条 delete。中间一条因为外键失败时，前面的删除已经生效，会留下部分状态。单个 PL/pgSQL 函数在一个事务里先解除 routine 对 scan 库存的引用，再删除 compatibility、recommendation 和 scan 来源库存。任一步失败都会一起回滚。函数还固定 <code>search_path</code>，撤销 public 和 anon 执行权，只允许 authenticated 与 service role，减少越权调用。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">08</span><span>追问八 你为什么觉得这个方案更好</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我判断方案好坏看三个条件。协议是否与真实生命周期一致，失败时能否回到确定状态，破坏性操作是否默认安全。分离两类 SSE 让生命周期清楚，完整 turn 和早期 abort 保证状态一致，显式替换与事务清理限制了数据损失范围。这些判断都有对应测试，不依赖一句代码更优雅。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">09</span><span>追问九 你如何证明修复有效</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我用了分层验证。iOS 有 parser、请求契约和视觉事件单元测试，工程构建和单元测试通过。后端对完整 turn、早期 abort、普通扫描不清理、空识别不清理、显式替换和 RPC 调用都做了回归测试。PR 16 修复后完整套件有 804 个测试通过，PR 23 的相关测试 40 个全过，完整套件有 958 个通过、5 个跳过。UI test runner 当时未能在模拟器启动，所以我不会把 UI 测试算作成功。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">10</span><span>追问十 如果现在重做，你还会改什么</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我会给上传增加 idempotency key，避免客户端重试创建重复 job。job 状态会从单进程内存迁到可持久化的共享存储，便于多实例和重启恢复。客户端还应记录首包时间、断流阶段、abort 是否生效和任务最终状态，用真实数据决定超时与重试参数。</p></blockquote></div>
+            </details></div>
+        </section>
+      </article>
+
+
+      <article class="star-card star-2" id="star-2" data-section>
+        <header class="star-header">
+          <div class="star-number" aria-hidden="true">02</div>
+          <div class="star-heading">
+            <p class="eyebrow">STAR CASE 2</p>
+            <h2>小程序钓鱼面与弱网加固</h2>
+            <div class="tag-row"><span>Ownership</span><span>安全意识</span><span>弱网恢复</span></div>
+          </div>
+        </header>
+        <details class="major-disclosure" open>
+          <summary><span>完整 STAR 框架</span><span class="summary-note">情境 · 任务 · 行动 · 结果</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose"><p>适合回答 ownership、安全意识、如何面对自己造成的问题。</p>
+<p><strong>S 情境</strong></p>
+<p>一次小程序全量前端审查修复了冷启动深链等六类问题。复查时发现 product 页直接展示 URL 参数中的品牌、商品名、推荐理由和购买链接。新加入的深链与转发能力使伪造卡片更容易传播。小程序同时存在多处弱网静默失败，用户会看到回复消失、分析中断或错误归因到照片质量。</p>
+<p><strong>T 任务</strong></p>
+<p>及时封住由自己前一项改动放大的攻击面，并在不依赖后端新接口的前提下，让聊天、鉴权和视觉轮询在微信网络环境中给出可理解、可恢复的结果。</p>
+<p><strong>A 行动</strong></p>
+<p>在 PR 18 中明确记录问题来源，移除 product 冷启动深链与转发入口，在落地页增加 HTTPS 白名单，并用伪造参数、<code>javascript:</code>、HTTP 和协议相对 URL 做回归测试。随后在 PR 19 中处理非 2xx SSE、网络层 fail、首包超时、中断文本保留、视觉轮询重试和微信 <code>{ errMsg }</code> 分类。针对非幂等上传，只重试 job status 轮询，不重新创建上传任务。又在 PR 20 中直接使用 catalog tool result 渲染商品卡，减少 LLM 文本差异对事实展示的影响。</p>
+<p><strong>R 结果</strong></p>
+<p>PR 16、18、19、20 全部合并且小程序 CI 成功。PR 18 完成 692 个测试，PR 19 新增 19 个用例并达到 706 个测试，PR 20 达到 721 个测试。撤销 PR 19 的修复会让 13 个新增用例失败，说明测试确实覆盖故障行为。没有留存线上转化或故障率数据，因此面试中应说消除了已确认的故障路径。</p></div>
+        </details>
+        <details class="major-disclosure transcript-disclosure">
+          <summary><span>九十秒口述稿</span><span class="summary-note">适合第一轮完整回答</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose transcript"><p>我在小程序里做过一次让我印象很深的安全修复。最初我为分享卡和二维码补了冷启动深链，功能通过测试。复查时我发现 product 页把 URL 里的品牌、商品名和购买链接直接当成可信内容，新深链又让伪造卡片可以冷启动直达和继续转发。我在后续 PR 里明确承认这个风险由前一版放大，先移除 product 深链和转发，再在消费端限制购买链接必须是 HTTPS，并补了多种恶意协议测试。然后我继续审查同一条链路，修了 SSE 非 2xx 静默结束、聊天中断丢失已收到文字、视觉轮询遇到一次抖动就让用户重拍等问题。上传本身非幂等，所以我只重试轮询，不重复建任务。四个 PR 都合并，测试从 687 个增加到 721 个。我的收获是功能可达性和数据可信度要一起设计，发现自己引入风险时要快速止血并把原因写清楚。</p></div>
+        </details>
+        <section class="qa-section" aria-labelledby="star-2-qa-title">
+          <div class="qa-title-row">
+            <div>
+              <p class="eyebrow">FOLLOW-UP DEFENSE</p>
+              <h3 id="star-2-qa-title">面试追问</h3>
+            </div>
+            <span class="question-count">11 questions</span>
+          </div>
+          <div class="qa-intro prose"><p>主要证据来自 <a href="https://github.com/phasebook-AI/phase-frontend/pull/16" target="_blank" rel="noreferrer">前端 PR 16</a>、<a href="https://github.com/phasebook-AI/phase-frontend/pull/18" target="_blank" rel="noreferrer">PR 18</a>、<a href="https://github.com/phasebook-AI/phase-frontend/pull/19" target="_blank" rel="noreferrer">PR 19</a> 和 <a href="https://github.com/phasebook-AI/phase-frontend/pull/20" target="_blank" rel="noreferrer">PR 20</a>。</p></div>
+          <div class="qa-list"><details class="qa-item">
+              <summary><span class="qa-index">01</span><span>追问一 你是怎么发现这个安全问题的</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我沿着新加的冷启动深链从入口追到最终消费点。product 页没有按 id 向后端取商品，它直接把 URL 参数中的品牌、商品名、推荐理由、图片和购买链接渲染出来，购买链接还能进入剪贴板。前一个 PR 又允许该页面冷启动直达，并把收到的参数继续用于分享。我进一步检查了后端接口，当时没有可用的商品详情查询，所以前端无法验证这些文本是否属于真实商品。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">02</span><span>追问二 为什么不只过滤恶意 URL</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>只限制 <code>javascript:</code> 或 HTTP 只能保护链接协议，无法证明品牌、商品名和推荐理由是真的。攻击者完全可以使用一个 HTTPS 钓鱼站，同时伪造一张 PHASE 风格的知名商品卡。由于当时没有后端详情接口，最稳妥的止血是暂时移除 product 冷启动深链和转发。落地页的 HTTPS 校验仍然保留，用来保护站内导航和未来新增入口。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">03</span><span>追问三 移除功能会不会影响用户体验</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>会，代价是 product 页暂时失去分享和扫码直达。我在 PR 里明确写了这个取舍和恢复条件。后端提供按稳定 product id 查询详情后，前端可以只从 URL 接收 id，正文和购买信息都从权威接口加载，再恢复深链与分享。在可信数据源缺失时，我选择缩小入口，因为错误的商品和购买链接会直接影响用户决策。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">04</span><span>追问四 你为什么还要在落地页再校验一次</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>原来的 HTTPS 检查只存在于一个构造导航参数的位置。新的入口、二维码或者未来代码可以绕过它。安全约束应放在数据真正被使用的位置，所以落地页复制链接和显示图片前还要复查协议。入口限制和消费端校验覆盖的是不同失效方式。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">05</span><span>追问五 弱网问题具体怎样修</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我把一次聊天和视觉任务按失败阶段拆开。SSE 收到非 2xx 时显式生成 error event，401 走统一登出。网络层 fail 和首包超时也转成用户能看懂的错误。流在 <code>turn_end</code> 前中断时，已经收到的文本保留下来并标注中断。视觉 job 已经创建以后，瞬时轮询失败允许恢复，成功一次就清零错误计数。401、403、404 没有重试价值，所以立即失败。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">06</span><span>追问六 为什么只重试轮询，不重试上传</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p><code>/api/upload</code> 当时没有幂等保证。重新上传可能创建第二个 job、重复分析并消耗额度。轮询只是查询已存在 job 的状态，短暂失败后重试不会改变业务数据。因此我把重试放在读取状态这一层，并把身份、权限和 job 不存在这类确定错误排除在重试之外。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">07</span><span>追问七 为什么设置连续三次失败才结束</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>代码允许前两次瞬时失败，第三次连续失败才结束，一次成功就重置计数。这个值是在可恢复性和等待时间之间做的保守选择，当时没有线上网络分布数据支撑更精确的参数。我不会把它描述成经过统计证明的最优值。后续应通过轮询失败次数、恢复比例和总等待时间来调整。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">08</span><span>追问八 为什么把 catalog tool result 当成商品卡事实来源</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>旧逻辑要求 LLM 正文精确包含 catalog 商品名才能渲染卡片。自然语言可能使用简称、翻译或不同标点，工具已经找到真实商品，卡片却可能消失。tool result 是后端查询并校验过的结构化数据，更适合提供图片、价格和购买链接。LLM 继续负责解释推荐理由，商品事实由 catalog 提供。前端还限制最多三个候选并去重，避免把整页搜索结果都当成推荐。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">09</span><span>追问九 你如何验证弱网修复真的覆盖了问题</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>PR 19 新增 19 个用例。我逐项撤销修复后，其中 13 个会失败，说明这些测试能区分修复前后的行为。剩余 6 个是对照用例，用来保证 2xx、空回合和不可重试状态没有被误伤。最终 129 个测试文件、706 个测试、TypeScript 检查和生产 API 构建通过。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">10</span><span>追问十 这是你自己引入的问题，你怎么向团队解释</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我会直接说明前一个 PR 增加了 product 深链和转发，使已有的 URL 信任问题更容易被利用。我在修复 PR 里写清攻击路径、影响和恢复条件，没有把问题包装成无关的历史遗留。发现后先缩小入口，再补消费端测试。对我来说，承担责任包含把因果写清、快速恢复安全状态，并让同类问题以后更容易被发现。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">11</span><span>追问十一 如果现在继续完善，你会做什么</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我会让 product 页面只接受稳定 id，由后端返回经过权限和目录校验的详情。购买链接应由服务端生成或映射，并记录打开失败与复制行为。网络方面会增加错误码、首包延迟、断流阶段和轮询恢复率，随后用数据调整超时和重试。上传接口也应加入幂等键。</p></blockquote></div>
+            </details></div>
+        </section>
+      </article>
+
+
+      <article class="star-card star-3" id="star-3" data-section>
+        <header class="star-header">
+          <div class="star-number" aria-hidden="true">03</div>
+          <div class="star-heading">
+            <p class="eyebrow">STAR CASE 3</p>
+            <h2>商品目录误判后的回滚与重构</h2>
+            <div class="tag-row"><span>失败复盘</span><span>架构取舍</span><span>团队协作</span></div>
+          </div>
+        </header>
+        <details class="major-disclosure" open>
+          <summary><span>完整 STAR 框架</span><span class="summary-note">情境 · 任务 · 行动 · 结果</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose"><p>适合回答失败经历、团队协作、架构取舍与恢复能力。</p>
+<p><strong>S 情境</strong></p>
+<p>小程序要求只展示 RéVive 商品。第一版在共享后端加入品牌 scope 和多入口过滤，并被小程序工作流在没有后端团队授权的情况下合并。后端评审指出两套部署已经通过不同 Supabase 数据源隔离目录，代码层品牌特判会重复约束，还可能漏掉 Agent、HTTP、后台任务和缓存入口。</p>
+<p><strong>T 任务</strong></p>
+<p>先恢复共享主干，再在不写死品牌的前提下建立统一、可审查的商品事实边界，同时修正跨团队的合并权限流程。</p>
+<p><strong>A 行动</strong></p>
+<p>发现问题后提交 PR 48 完整回滚 12 个文件，并在原 PR 留下记录，停止由小程序工作流继续合并后端。新方案按依赖拆成三层。第一层为库存、routine、watchlist 和 recommendation 增加可空 catalog 外键。第二层把 <code>product_cache</code> 设为 active catalog，Agent 的 search、lookup、price 与 state write 都要求 catalog id。第三层把 onboarding、计划、推荐、皮肤诊断、库存和价格比较接入同一边界。每个 stacked PR 写明 base 调整与合并顺序，避免评审看到重复 diff。</p>
+<p><strong>R 结果</strong></p>
+<p>错误方案被完整回滚，随后 PR 49、50、51 按顺序合并并通过 CI。PR 50 有 63 个聚焦测试，PR 51 通过完整测试与构建。最终共享代码不包含 RéVive 品牌特判，当前环境展示哪些商品由其数据源决定。面试时可以坦诚说明这是一次流程和架构双重失误，价值在于快速恢复、留下记录并交付更通用的方案。</p></div>
+        </details>
+        <details class="major-disclosure transcript-disclosure">
+          <summary><span>九十秒口述稿</span><span class="summary-note">适合第一轮完整回答</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="disclosure-body prose transcript"><p>我经历过一次需要主动承担责任的架构失误。小程序环境只需要 RéVive 商品，我最初在共享后端加了品牌过滤，而且改动被小程序工作流在没有后端团队授权时合并。评审指出真正的隔离已经存在于两套 Supabase 数据源，代码里再加品牌 scope 会重复约束，也很难覆盖 Agent、HTTP 和后台任务的所有入口。我先提交回滚，把 12 个文件恢复，并明确停止跨团队越权合并。随后我把需求重新拆成三个 stacked PR。第一层加 catalog 外键，第二层让 Agent 工具只能使用 active catalog，第三层让所有服务端商品流程走同一事实源。三个 PR 写清依赖和合并顺序，全部通过 CI 后按顺序合并。这件事让我学到，架构边界要放在能覆盖所有入口的位置，团队授权也是系统约束的一部分。</p></div>
+        </details>
+        <section class="qa-section" aria-labelledby="star-3-qa-title">
+          <div class="qa-title-row">
+            <div>
+              <p class="eyebrow">FOLLOW-UP DEFENSE</p>
+              <h3 id="star-3-qa-title">面试追问</h3>
+            </div>
+            <span class="question-count">11 questions</span>
+          </div>
+          <div class="qa-intro prose"><p>主要证据来自 <a href="https://github.com/phasebook-AI/phase/pull/47" target="_blank" rel="noreferrer">后端 PR 47</a>、<a href="https://github.com/phasebook-AI/phase/pull/48" target="_blank" rel="noreferrer">PR 48</a>、<a href="https://github.com/phasebook-AI/phase/pull/49" target="_blank" rel="noreferrer">PR 49</a>、<a href="https://github.com/phasebook-AI/phase/pull/50" target="_blank" rel="noreferrer">PR 50</a> 和 <a href="https://github.com/phasebook-AI/phase/pull/51" target="_blank" rel="noreferrer">PR 51</a>。</p></div>
+          <div class="qa-list"><details class="qa-item">
+              <summary><span class="qa-index">01</span><span>追问一 你最初的方案为什么错了</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我把小程序只展示 RéVive 的要求理解成共享业务代码需要品牌过滤。团队实际采用两套 Supabase 数据源，小程序环境只导入批准的 RéVive 商品，iOS 环境使用自己的完整目录。代码层 scope 会与数据隔离重复，而且需要在 Agent 工具、HTTP 路由、后台任务、缓存和价格查询等入口重复实现，遗漏一个入口就会出现行为不一致。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">02</span><span>追问二 发现问题后为什么选择立即回滚</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>当时已经确认方案依赖错误的架构前提，而且合并没有得到后端团队授权。继续在错误方案上修补会扩大 diff，也会让共享 main 长时间处于有争议状态。PR 48 精确反向恢复 PR 47 的 12 个文件，没有改生产数据。回滚先恢复已知基线，让新方案能够独立评审。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">03</span><span>追问三 为什么数据源隔离更合适</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>小程序环境的数据库只有获批商品，任何正常查询都会自然落在同一范围内，Agent、HTTP 和后台任务无需各自记住品牌规则。共享代码也能继续服务 iOS 环境。这个方案依赖严格的导入流程和目录审计，所以数据源隔离不能只靠口头约定，需要在导入、Storage 和定期 audit 上持续验证。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">04</span><span>追问四 为什么后来又增加 active catalog 边界</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>数据源决定环境里有哪些商品，active catalog 决定应用怎样引用这些商品。历史代码里仍可能使用模型生成文本、fixture 或旧缓存。新方案要求商品状态保存 canonical catalog id，Agent 的搜索、价格和写入都通过同一目录服务，服务端页面也从该目录取品牌、图片和价格。这样可以避免模型创造商品，也能让不同入口得到一致事实。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">05</span><span>追问五 为什么拆成三个 stacked PR</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>三层存在明确依赖。数据库先提供可空外键，Agent 和 domain tool 才能保存 catalog id，最后 server flow 才能全面切换。若一次提交，reviewer 会同时面对 migration、工具和大量路由，发生问题也难以确定回滚层级。stacked PR 让每一层只展示自己的 diff，并明确先合并 49、再把 50 retarget 到 main、最后处理 51。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">06</span><span>追问六 为什么外键先设计成可空</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>现有数据库有历史库存、routine 和 recommendation，它们未必都能立即映射到 catalog。强制非空会让 migration 或旧数据读取直接失败。可空外键允许 schema 先安全上线，新写入逐步要求 canonical id，无法解析的旧记录可以明确降级或 fail closed。等迁移覆盖率和数据审计达到要求后，再评估是否收紧约束。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">07</span><span>追问七 什么叫 fail closed</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>当 catalog 为空、不可访问或者商品无法匹配时，系统不再回退到模型编造、旧 fixture 或不受控的外部文本来生成购买信息。它可以返回没有可验证商品，或者只保留不带商品事实的建议。代价是短期内可能少展示内容，但不会把未经验证的商品当成真实推荐。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">08</span><span>追问八 你怎样处理和后端团队的协作问题</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我先在原 PR 留下记录，说明这次合并缺少后端授权，并停止由小程序工作流继续合并后端。新方案把每层依赖、base 和合并顺序写进 PR，让后端团队能够按自己的节奏审核。以后遇到共享后端和部署边界变化，我会先确认代码所有权、数据源和发布人，再进入实现。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">09</span><span>追问九 你如何证明新方案比原方案更好</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>原方案在 12 个入口附近加入品牌 scope，覆盖完整性很难证明。新方案把范围交给环境数据，把商品真实性集中到 active catalog。PR 49 只处理 schema，PR 50 有 8 个聚焦测试文件和 63 个测试，PR 51 覆盖 onboarding、推荐、计划、皮肤诊断、库存和价格比较，并通过完整测试与构建。它还消除了共享代码中的 RéVive 特判。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">10</span><span>追问十 如果未来同一个数据库需要多个品牌或市场怎么办</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>那时单纯依赖独立数据源可能不够。我会在数据模型中增加 tenant、market 或 catalog scope，并通过数据库查询边界、视图或策略统一限制访问。这个维度需要覆盖导入、读写和缓存键，不能继续用散落在业务代码里的品牌字符串判断。选择哪种方式要看部署是否仍然物理隔离，以及同库跨市场查询是不是实际需求。</p></blockquote></div>
+            </details><details class="qa-item">
+              <summary><span class="qa-index">11</span><span>追问十一 这次失败最大的收获是什么</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+              <div class="qa-answer prose"><p>建议回答</p>
+<blockquote><p>我学到两件很具体的事。开始改共享后端以前，要先画清客户端、部署环境、数据库和代码所有权。发现架构前提错误时，回滚通常比继续修补更可靠。技术方案通过测试仍然可能违反团队的发布权限，流程约束也需要在 PR 和仓库规则里落实。</p></blockquote></div>
+            </details></div>
+        </section>
+      </article>
+
+
+        <section class="truth-card" id="truth-boundary" data-section>
+          <header class="truth-banner">
+            <p class="eyebrow">TRUTH BOUNDARY</p>
+            <h2>个人贡献与事实边界</h2>
+            <p>把 reviewer 的贡献、开放 PR、生产部署和线上指标说清楚，可信度会比夸大的数字更有力量。</p>
+          </header>
+          <div class="truth-body prose"><p>这份材料接在《PHASE 实习工作复盘与 STAR 面试素材》之后使用。建议先用九十秒版本讲完整故事，面试官追问时再从这里选一段回答。每次回答控制在三十到六十秒，先给判断，再给两三个关键动作，最后说明验证和限制。</p>
+<h2>回答前先守住个人贡献边界</h2>
+<p>GitHub 记录能证明这些 PR 由 Andy（化名）发起并推进，也能看见后端 reviewer 多次提出阻塞问题，部分后续修正由 reviewer 直接推送到 PR 分支。面试官问你个人做了什么时，建议按实际情况回答。</p>
+<p>如果初始实现、排查和测试主要由你完成，可以说</p>
+<blockquote><p>我负责发现问题、设计第一版方案、发起 PR 和补测试。reviewer 在代码审查中指出了我没有覆盖的边界，部分修改由他直接 push 到分支。我重新读了这些修改，补做验证，并把改动按可评审范围推进到合并。</p></blockquote>
+<p>不要把 reviewer 明确提交的代码说成自己独立完成。你仍然可以讲清自己怎样发起问题、怎样回应 review、怎样验证结果，以及这次反馈怎样改变了后续决策。</p>
+<p>如果面试官追问线上指标，可以说</p>
+<blockquote><p>当时没有一套能把这些 PR 与线上故障率直接关联的监控数据，所以我不会给出一个无法证明的百分比。我能证明的是具体故障路径被测试覆盖、CI 和构建通过、PR 合并。后续我会通过错误码、首包时间、任务失败阶段和重复上传数补齐线上验证。</p></blockquote><h2>面试表达边界</h2>
+<ul><li>可以说 54 个 PR 中 42 个已合并，GitHub 默认分支可检索到 71 个归属 commit。</li><li>可以说完成了 CI、单元测试、TypeScript 检查或构建，前提是引用对应 PR 的真实结果。</li><li>不要把 GitHub 合并说成生产部署。PR 23 和 PR 71 都明确说明数据库 migration 仍需要部署侧应用。</li><li>不要编造 DAU、故障率、延迟下降、转化率或用户评价。现有仓库没有这些数据。</li><li>谈失败时承担具体动作，同时讲清恢复速度、技术修正和流程修正。避免把责任推给工作流或评审者。</li><li>被追问个人贡献时，沿着文件、API、状态机、测试和 review fix 回答，不要只说参与了全栈开发。</li></ul>
+<h2>关键证据入口</h2>
+<ul><li>iOS SSE 迁移 <a href="https://github.com/phasebook-AI/phase-ios-app/pull/1" target="_blank" rel="noreferrer">phase-ios-app PR 1</a></li><li>混合后端 PR 的关闭与拆分 <a href="https://github.com/phasebook-AI/phase/pull/11" target="_blank" rel="noreferrer">phase PR 11</a></li><li>SSE 启动与早期取消 <a href="https://github.com/phasebook-AI/phase/pull/16" target="_blank" rel="noreferrer">phase PR 16</a></li><li>异步视觉上传与原子清理 <a href="https://github.com/phasebook-AI/phase/pull/23" target="_blank" rel="noreferrer">phase PR 23</a></li><li>小程序六类问题审查 <a href="https://github.com/phasebook-AI/phase-frontend/pull/16" target="_blank" rel="noreferrer">phase-frontend PR 16</a></li><li>商品深链钓鱼修复 <a href="https://github.com/phasebook-AI/phase-frontend/pull/18" target="_blank" rel="noreferrer">phase-frontend PR 18</a></li><li>弱网与静默失败修复 <a href="https://github.com/phasebook-AI/phase-frontend/pull/19" target="_blank" rel="noreferrer">phase-frontend PR 19</a></li><li>catalog tool 商品卡 <a href="https://github.com/phasebook-AI/phase-frontend/pull/20" target="_blank" rel="noreferrer">phase-frontend PR 20</a></li><li>错误 scope 方案与复盘 <a href="https://github.com/phasebook-AI/phase/pull/47" target="_blank" rel="noreferrer">phase PR 47</a></li><li>回滚 <a href="https://github.com/phasebook-AI/phase/pull/48" target="_blank" rel="noreferrer">phase PR 48</a></li><li>三层 catalog 重构 <a href="https://github.com/phasebook-AI/phase/pull/49" target="_blank" rel="noreferrer">phase PR 49</a>、<a href="https://github.com/phasebook-AI/phase/pull/50" target="_blank" rel="noreferrer">phase PR 50</a>、<a href="https://github.com/phasebook-AI/phase/pull/51" target="_blank" rel="noreferrer">phase PR 51</a></li></ul></div>
+        </section>
+
+        <details class="cross-card" id="cross-questions" data-section open>
+          <summary><span>面试官横向追问</span><span class="summary-note">个人贡献 · 能力短板 · 指标压力</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="cross-body prose"><h2>面试官横向追问</h2>
+<h3>你在三件事里承担的共同角色是什么</h3>
+<p>建议回答</p>
+<blockquote><p>我的共同角色是把客户端症状追到协议、状态和数据库边界，再把修复拆成可以验证的 PR。iOS 项目里我处理实时协议与异步任务，小程序里处理可信输入和弱网，商品目录里处理数据源与共享代码的职责。reviewer 提出的阻塞问题也促使我把默认安全、事务性和分支范围纳入设计。</p></blockquote>
+<h3>你最擅长的能力是什么</h3>
+<p>建议回答</p>
+<blockquote><p>我比较擅长跨层排查。一个页面上的思考中消失，我会继续看 SSE 状态码和状态机。一个商品卡显示错误，我会追到 URL、tool result 和 catalog。一个删除失败，我会继续查外键和事务。我的优势来自把用户看到的现象与后端真实状态对应起来，并用测试固定行为。</p></blockquote>
+<h3>你最需要提升的地方是什么</h3>
+<p>建议回答</p>
+<blockquote><p>早期我有把多个问题一起放进大 PR、在架构和所有权没有完全确认时先实现的倾向。PR 11、12 和商品目录回滚都说明这个问题。后来我开始使用短生命周期分支、stacked PR、明确 base 和合并顺序。下一步还需要把这套习惯提前到编码前，通过简短设计说明先确认数据和发布边界。</p></blockquote>
+<h3>如果面试官说这些都是 reviewer 帮你修的</h3>
+<p>建议回答</p>
+<blockquote><p>reviewer 确实指出并在部分 PR 中直接提交了关键修正，我不会抹掉这部分贡献。我的工作包括提出需求和第一版实现、维护 PR、理解阻塞问题、补验证并推动最终合并。更重要的是，我能解释为什么原方案有风险、修正怎样改变了状态和数据边界，以及以后怎样在第一版就避免同类问题。实习中学会使用高质量 review，本身也是我的成长。</p></blockquote>
+<h3>如果面试官要求一个量化结果</h3>
+<p>建议回答</p>
+<blockquote><p>我可以给出代码和验证数字，例如 PR 范围、专项用例和完整测试数。现有材料无法证明线上故障率或转化率变化，所以我不会编一个业务百分比。如果重新做，我会在上线前定义首包时间、断流率、重复 job 数、无效商品卡数和 catalog miss rate，再做发布前后对比。</p></blockquote><h2>临场使用方法</h2>
+<ul><li>每个回答先给判断，再选两个动作，最后给验证。</li><li>面试官问为什么时，讲替代方案和代价，不重复实现步骤。</li><li>面试官指出失误时，先承认事实，再讲恢复动作和后来怎样改变流程。</li><li>被问到生产效果时，明确区分测试、合并、部署和用户指标。</li><li>记住关键名词和因果即可，不必逐字背诵整段答案。</li></ul></div>
+        </details>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <strong>PHASE INTERNSHIP · STAR PLAYBOOK</strong>
+      <p>公开脱敏版 · 单文件离线版 · GitHub 证据位于文内链接</p>
+    </div>
+  </footer>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const status = document.getElementById('status');
+      const themeButton = document.getElementById('theme-toggle');
+      const details = () => [...document.querySelectorAll('details')];
+      let statusTimer;
+
+      function announce(message) {
+        status.textContent = message;
+        status.classList.add('show');
+        clearTimeout(statusTimer);
+        statusTimer = setTimeout(() => status.classList.remove('show'), 1800);
+      }
+
+      function setTheme(theme, persist = true) {
+        root.dataset.theme = theme;
+        themeButton.textContent = theme === 'dark' ? '浅色' : '深色';
+        themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
+        if (persist) localStorage.setItem('phase-playbook-theme', theme);
+      }
+
+      const savedTheme = localStorage.getItem('phase-playbook-theme');
+      const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      setTheme(savedTheme || preferredTheme, false);
+
+      document.getElementById('expand-all').addEventListener('click', () => {
+        details().forEach(item => item.open = true);
+        announce(`已展开 ${details().length} 个内容区块`);
+      });
+      document.getElementById('collapse-all').addEventListener('click', () => {
+        details().forEach(item => item.open = false);
+        announce('已收起全部内容');
+      });
+      themeButton.addEventListener('click', () => {
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        announce(next === 'dark' ? '已切换深色主题' : '已切换浅色主题');
+      });
+      document.getElementById('print-page').addEventListener('click', () => window.print());
+
+      const progressBar = document.getElementById('progress-bar');
+      let ticking = false;
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        progressBar.style.width = `${ratio * 100}%`;
+        ticking = false;
+      }
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+      updateProgress();
+
+      document.querySelectorAll('.nav-card a').forEach(link => {
+        link.addEventListener('click', () => {
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target?.tagName === 'DETAILS') target.open = true;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

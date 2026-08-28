@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#13223a">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="基于真实技术面试持续整理的开发知识手册，覆盖 Swift、iOS 性能、React、SSE、Agent Harness 与浏览器渲染。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2313223a'/%3E%3Cpath d='M17 13h30v8H17zm0 15h20v8H17zm0 15h26v8H17z' fill='%23ff6b43'/%3E%3C/svg%3E">
+  <title>开发面试知识复盘手册</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #13223a;
+      --navy-2: #1d3152;
+      --ink: #172033;
+      --muted: #566176;
+      --paper: #f5f1e8;
+      --surface: #fffdf8;
+      --surface-2: #e8edf2;
+      --line: #172033;
+      --line-soft: #b9c1cc;
+      --orange: #ff6b43;
+      --orange-deep: #bf3718;
+      --cyan: #4fc3c8;
+      --yellow: #f6c945;
+      --green: #2e806c;
+      --code-bg: #101827;
+      --code-ink: #e9edf5;
+      --shadow: 7px 7px 0 var(--line);
+      --display: Georgia, "Songti SC", "STSong", serif;
+      --body: "Avenir Next", Avenir, "PingFang SC", "Hiragino Sans GB", sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --navy: #08101c;
+      --navy-2: #14243e;
+      --ink: #f4efe4;
+      --muted: #c3c8d2;
+      --paper: #0f1724;
+      --surface: #192235;
+      --surface-2: #222e43;
+      --line: #f0eadf;
+      --line-soft: #536078;
+      --orange: #ff7957;
+      --orange-deep: #ff9a80;
+      --cyan: #78d8dc;
+      --yellow: #f7d76c;
+      --green: #83cbb6;
+      --code-bg: #050a12;
+      --code-ink: #f2f4f8;
+      --shadow: 7px 7px 0 var(--orange);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--line-soft) 20%, transparent) 1px, transparent 1px),
+        linear-gradient(color-mix(in srgb, var(--line-soft) 20%, transparent) 1px, transparent 1px),
+        var(--paper);
+      background-size: 32px 32px;
+      font-family: var(--body);
+      font-size: 1rem;
+      line-height: 1.68;
+      overflow-wrap: anywhere;
+    }
+
+    a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button {
+      min-width: 44px;
+      min-height: 44px;
+      border: 2px solid currentColor;
+      background: transparent;
+      color: inherit;
+      padding: 0.65rem 0.85rem;
+      font: 800 0.85rem/1 var(--body);
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease, color 140ms ease;
+    }
+    button:hover, button:focus-visible { background: var(--orange); color: #111; transform: translateY(-2px); }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+    code, pre, .mono { font-family: var(--mono); }
+
+    .skip-link {
+      position: fixed;
+      inset-block-start: -6rem;
+      inset-inline-start: 1rem;
+      z-index: 1000;
+      padding: 0.8rem 1rem;
+      background: var(--orange);
+      color: #111;
+      border: 2px solid #111;
+      font-weight: 900;
+    }
+    .skip-link:focus { inset-block-start: 1rem; }
+
+    .toolbar {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem max(1rem, calc((100vw - 82rem) / 2));
+      background: color-mix(in srgb, var(--navy) 96%, transparent);
+      color: #f8f2e7;
+      border-block-end: 3px solid var(--orange);
+      backdrop-filter: blur(12px);
+    }
+    .brand { display: flex; align-items: center; gap: 0.7rem; font: 900 0.78rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+    .brand-mark { display: grid; place-items: center; width: 2.45rem; height: 2.45rem; background: var(--orange); color: #111; border-radius: 50%; font: 900 1.2rem/1 var(--display); }
+    .toolbar-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.45rem; }
+
+    .shell { width: min(100% - 2rem, 82rem); margin-inline: auto; }
+    .hero {
+      position: relative;
+      min-height: 40rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
+      gap: clamp(2rem, 6vw, 7rem);
+      align-items: end;
+      padding-block: clamp(5rem, 10vw, 9rem) 4rem;
+    }
+    .hero::before {
+      content: "DEV";
+      position: absolute;
+      inset-block-start: 1rem;
+      inset-inline-end: 0;
+      color: transparent;
+      -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 22%, transparent);
+      font: 900 clamp(10rem, 24vw, 22rem)/0.8 var(--body);
+      letter-spacing: -0.11em;
+      pointer-events: none;
+    }
+    .kicker { margin: 0 0 1.2rem; color: var(--orange-deep); font: 900 0.82rem/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+    .kicker::before { content: ""; display: inline-block; width: 3rem; height: 0.4rem; margin-inline-end: 0.7rem; background: var(--orange); vertical-align: 0.1em; }
+    h1, h2, h3, h4 { margin: 0; line-height: 1.08; text-wrap: balance; }
+    h1 { position: relative; max-width: 10ch; font: 900 clamp(3.6rem, 9vw, 8rem)/0.96 var(--display); letter-spacing: -0.065em; }
+    h2 { font: 900 clamp(2.2rem, 5.5vw, 5rem)/1 var(--display); letter-spacing: -0.045em; }
+    h3 { font: 900 clamp(1.45rem, 2.6vw, 2.25rem)/1.12 var(--display); }
+    h4 { font-size: 1.05rem; }
+    .hero-copy { position: relative; max-width: 52rem; margin: 1.5rem 0 0; color: var(--muted); font-size: clamp(1.05rem, 1.6vw, 1.32rem); }
+    .hero-copy strong { color: var(--ink); background: linear-gradient(transparent 55%, color-mix(in srgb, var(--orange) 48%, transparent) 55%); }
+    .case-card { position: relative; padding: 1.5rem; background: var(--surface); border: 3px solid var(--line); box-shadow: var(--shadow); transform: rotate(1deg); }
+    .case-card p { margin: 0; }
+    .case-card dl { margin: 1rem 0 0; }
+    .case-card div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; padding-block: 0.8rem; border-block-end: 1px solid var(--line-soft); }
+    .case-card div:last-child { border-block-end: 0; }
+    dt { color: var(--muted); font: 800 0.75rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+    dd { margin: 0; font-weight: 850; }
+
+    .boundary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.2rem;
+      align-items: center;
+      margin-block: 1rem 4rem;
+      padding: 1rem 1.2rem;
+      background: var(--navy);
+      color: #f7f2e7;
+      border: 2px solid var(--navy);
+    }
+    .boundary b { color: var(--orange); font: 900 0.78rem/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+    .boundary p { margin: 0; }
+
+    .map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 3px solid var(--line);
+      background: var(--surface);
+      margin-block-end: 5rem;
+    }
+    .map a { min-height: 12rem; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem; text-decoration: none; border-inline-end: 2px solid var(--line); }
+    .map a:last-child { border-inline-end: 0; }
+    .map a:hover, .map a:focus-visible { background: var(--orange); color: #111; }
+    .map span { font: 900 2.6rem/1 var(--mono); color: var(--orange-deep); }
+    .map a:hover span, .map a:focus-visible span { color: #111; }
+    .map strong { font-family: var(--display); font-size: 1.45rem; }
+    .map small { color: var(--muted); }
+    .interview-map-label { margin: -2rem 0 1rem; color: var(--orange-deep); font: 900 0.82rem/1.4 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+    .interview-divider {
+      position: relative;
+      margin-block: 5rem 0;
+      padding: clamp(1.4rem, 4vw, 3rem);
+      background: var(--navy);
+      color: #f8f2e7;
+      border: 3px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .interview-divider::after { content: "002"; position: absolute; inset-inline-end: 1rem; inset-block-end: -0.2em; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, #f8f2e7 32%, transparent); font: 900 clamp(6rem, 17vw, 13rem)/0.8 var(--mono); pointer-events: none; }
+    .interview-divider h2 { position: relative; max-width: 15ch; z-index: 1; }
+    .interview-divider p { position: relative; max-width: 70ch; z-index: 1; color: #dce2ec; }
+
+    .sequence { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin: 1.2rem 0 0; padding: 0; list-style: none; counter-reset: sequence; }
+    .sequence li { position: relative; min-height: 9rem; padding: 1rem 1rem 1rem 4.2rem; background: var(--surface-2); border: 2px solid var(--line); counter-increment: sequence; }
+    .sequence li::before { content: counter(sequence, decimal-leading-zero); position: absolute; inset-inline-start: 1rem; inset-block-start: 1rem; color: var(--orange-deep); font: 900 1.5rem/1 var(--mono); }
+    .sequence strong { display: block; margin-block-end: 0.45rem; font-family: var(--display); font-size: 1.16rem; }
+    .sequence p { margin: 0; color: var(--muted); }
+
+    .signal-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin-block-start: 1.2rem; border: 2px solid var(--line); }
+    .signal-strip div { min-height: 8rem; padding: 1rem; background: var(--surface); border-inline-end: 1px solid var(--line); }
+    .signal-strip div:last-child { border-inline-end: 0; }
+    .signal-strip b { display: block; margin-block-end: 0.5rem; color: var(--orange-deep); font: 900 0.78rem/1.3 var(--mono); }
+    .signal-strip p { margin: 0; color: var(--muted); }
+
+    .chapter { padding-block: clamp(4.5rem, 9vw, 8rem); border-block-start: 3px solid var(--line); }
+    .chapter-head { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 1.5rem; align-items: start; margin-block-end: 3rem; }
+    .chapter-no { color: var(--orange); font: 900 clamp(3rem, 7vw, 6rem)/0.85 var(--mono); }
+    .chapter-intro { max-width: 66ch; margin: 1rem 0 0; color: var(--muted); font-size: 1.08rem; }
+    .chapter-grid { display: grid; grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.26fr); gap: 1.2rem; align-items: start; }
+    .side-note { position: sticky; inset-block-start: 6.5rem; padding: 1.25rem; background: var(--surface-2); border: 2px solid var(--line); }
+    .side-note ul { margin: 1rem 0 0; padding-inline-start: 1.2rem; }
+    .side-note li + li { margin-block-start: 0.6rem; }
+    .content-stack { display: grid; gap: 1.2rem; }
+    .panel { padding: clamp(1.2rem, 2.8vw, 2rem); background: var(--surface); border: 2px solid var(--line); }
+    .panel > :first-child { margin-block-start: 0; }
+    .panel > :last-child { margin-block-end: 0; }
+    .label { margin: 0 0 1rem; color: var(--orange-deep); font: 900 0.76rem/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+    .panel h3 + p, .panel h4 + p { margin-block-start: 0.7rem; }
+    .panel p { max-width: 75ch; }
+    .accent-panel { background: var(--navy); color: #f8f2e7; border-color: var(--navy); }
+    .accent-panel .label { color: var(--orange); }
+    .accent-panel p { color: #e1e5ed; }
+
+    .compare { width: 100%; border-collapse: collapse; margin-block-start: 1.2rem; }
+    .compare th, .compare td { padding: 0.85rem; border: 1px solid var(--line-soft); text-align: start; vertical-align: top; }
+    .compare th { background: var(--surface-2); font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; }
+    .compare code { white-space: nowrap; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); margin-block-start: 1.2rem; border: 2px solid var(--line); }
+    .flow div { position: relative; min-height: 9.5rem; padding: 1rem; background: var(--surface); border-inline-end: 1px solid var(--line); }
+    .flow div:last-child { border-inline-end: 0; }
+    .flow b { display: block; margin-block-end: 0.7rem; color: var(--orange-deep); font: 900 1.7rem/1 var(--mono); }
+    .flow small { color: var(--muted); }
+
+    pre { position: relative; margin: 1rem 0 0; padding: 1.15rem; background: var(--code-bg); color: var(--code-ink); border-inline-start: 5px solid var(--orange); overflow-x: auto; font-size: 0.88rem; line-height: 1.65; tab-size: 2; }
+    pre code { white-space: pre; }
+    .comment { color: #8bd5a9; }
+    .keyword { color: #ff9a7e; }
+    .type { color: #84d9df; }
+    .string { color: #f2d27a; }
+
+    .answer-box { padding: 1.5rem; background: color-mix(in srgb, var(--cyan) 18%, var(--surface)); border: 3px solid var(--line); box-shadow: 5px 5px 0 var(--line); }
+    .answer-box blockquote { margin: 0; font-family: var(--display); font-size: clamp(1.12rem, 1.7vw, 1.35rem); line-height: 1.65; }
+    .answer-box footer { margin-block-start: 1rem; color: var(--muted); font: 800 0.76rem/1.4 var(--mono); }
+
+    details { background: var(--surface); border: 2px solid var(--line); }
+    details + details { margin-block-start: 0.75rem; }
+    summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; cursor: pointer; font-weight: 900; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; flex: 0 0 auto; color: var(--orange-deep); font: 900 1.5rem/1 var(--mono); }
+    details[open] > summary { border-block-end: 2px solid var(--line); }
+    details[open] > summary::after { content: "×"; }
+    .detail-body { padding: 1rem 1.1rem; }
+    .detail-body > :first-child { margin-block-start: 0; }
+    .detail-body > :last-child { margin-block-end: 0; }
+
+    .fact-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-block-start: 1rem; }
+    .fact { min-height: 8rem; padding: 1rem; background: var(--surface-2); border-inline-start: 5px solid var(--orange); }
+    .fact strong { display: block; margin-block-end: 0.45rem; }
+    .fact p { margin: 0; color: var(--muted); }
+
+    .evidence-ledger { margin-block: 0 5rem; padding: clamp(1.2rem, 3vw, 2rem); background: var(--surface); border: 3px solid var(--line); box-shadow: var(--shadow); }
+    .evidence-ledger h2 { max-width: 15ch; font-size: clamp(2rem, 4vw, 3.8rem); }
+    .evidence-ledger > p { max-width: 75ch; color: var(--muted); }
+    .evidence-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin-block-start: 1.5rem; }
+    .evidence-card { min-height: 12rem; padding: 1rem; background: var(--surface-2); border: 2px solid var(--line); }
+    .evidence-card b { display: block; margin-block-end: 0.7rem; color: var(--orange-deep); font: 900 0.76rem/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+    .evidence-card strong { display: block; font-family: var(--display); font-size: 1.3rem; line-height: 1.15; }
+    .evidence-card p { margin: 0.7rem 0; color: var(--muted); }
+    .evidence-card a { font: 800 0.78rem/1.4 var(--mono); }
+    .truth-line { margin-block-start: 1rem; padding: 1rem; background: var(--navy); color: #f8f2e7; border-inline-start: 7px solid var(--orange); }
+    .truth-line strong { color: var(--orange); }
+    .proof-list { display: grid; gap: 0.75rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+    .proof-list li { padding: 0.85rem 1rem; background: color-mix(in srgb, var(--surface) 12%, transparent); border: 1px solid color-mix(in srgb, currentColor 35%, transparent); }
+    .proof-list code { color: var(--yellow); }
+    .proof-list a { color: var(--cyan); font-weight: 800; }
+
+    .symptom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .symptom-card { padding: 1.1rem; background: var(--surface); border: 2px solid var(--line); }
+    .symptom-card h4 { color: var(--orange-deep); }
+    .symptom-card p { margin-block-end: 0; }
+
+    .checklist { margin: 1rem 0 0; padding: 0; list-style: none; }
+    .checklist li { position: relative; padding-inline-start: 1.8rem; }
+    .checklist li + li { margin-block-start: 0.65rem; }
+    .checklist li::before { content: "□"; position: absolute; inset-inline-start: 0; color: var(--orange-deep); font: 900 1.2rem/1 var(--mono); }
+
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .related-grid article { min-height: 15rem; padding: 1.2rem; background: var(--surface); border: 2px solid var(--line); }
+    .related-grid span { color: var(--orange-deep); font: 900 0.76rem/1 var(--mono); letter-spacing: 0.1em; }
+    .related-grid h3 { margin-block: 0.8rem; }
+
+    .technique {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border: 3px solid var(--line);
+      margin-block: 2rem;
+    }
+    .technique article { min-height: 13rem; padding: 1.1rem; background: var(--surface); border-inline-end: 1px solid var(--line); }
+    .technique article:last-child { border-inline-end: 0; }
+    .technique b { display: block; margin-block-end: 0.8rem; color: var(--orange-deep); font: 900 2rem/1 var(--mono); }
+
+    .source-list { display: grid; gap: 0.7rem; padding: 0; list-style: none; }
+    .source-list a { display: block; padding: 0.85rem 1rem; background: var(--surface); border: 1px solid var(--line); }
+    .source-list a:hover, .source-list a:focus-visible { background: var(--orange); color: #111; }
+
+    .footer { padding-block: 2rem 4rem; color: var(--muted); font: 0.78rem/1.6 var(--mono); }
+    .status { position: fixed; inset-inline-end: 1rem; inset-block-end: 1rem; z-index: 200; padding: 0.75rem 1rem; background: var(--navy); color: #fff; border: 2px solid var(--orange); transform: translateY(150%); opacity: 0; transition: transform 160ms ease, opacity 160ms ease; }
+    .status.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 68rem) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .case-card { max-width: 42rem; transform: none; }
+      .chapter-grid { grid-template-columns: minmax(0, 1fr); }
+      .chapter-grid > *, .content-stack, .panel, .side-note { min-width: 0; }
+      .side-note { position: static; }
+      .map { grid-template-columns: repeat(2, 1fr); }
+      .map a:nth-child(2) { border-inline-end: 0; }
+      .map a:nth-child(-n+2) { border-block-end: 2px solid var(--line); }
+      .signal-strip { grid-template-columns: repeat(2, 1fr); }
+      .signal-strip div:nth-child(2) { border-inline-end: 0; }
+      .signal-strip div:nth-child(-n+2) { border-block-end: 1px solid var(--line); }
+      .flow { grid-template-columns: repeat(3, 1fr); }
+      .flow div:nth-child(3) { border-inline-end: 0; }
+      .flow div:nth-child(-n+3) { border-block-end: 1px solid var(--line); }
+      .related-grid { grid-template-columns: repeat(2, 1fr); }
+      .evidence-grid { grid-template-columns: repeat(2, 1fr); }
+      .technique { grid-template-columns: repeat(3, 1fr); }
+      .technique article:nth-child(3) { border-inline-end: 0; }
+      .technique article:nth-child(-n+3) { border-block-end: 1px solid var(--line); }
+    }
+
+    @media (max-width: 48rem) {
+      .toolbar { align-items: flex-start; }
+      .brand span:last-child { display: none; }
+      .toolbar-actions { gap: 0.3rem; }
+      .toolbar button { padding-inline: 0.55rem; font-size: 0.76rem; }
+      .shell { width: min(100% - 1rem, 82rem); }
+      .hero::before { display: none; }
+      .chapter-head { grid-template-columns: 1fr; }
+      .chapter-no { font-size: 2.7rem; }
+      .map, .fact-list, .symptom-grid, .related-grid, .evidence-grid, .sequence, .signal-strip { grid-template-columns: 1fr; }
+      .map a { min-height: 8rem; border-inline-end: 0; border-block-end: 2px solid var(--line); }
+      .map a:last-child { border-block-end: 0; }
+      .signal-strip div { min-height: auto; border-inline-end: 0; border-block-end: 1px solid var(--line); }
+      .signal-strip div:last-child { border-block-end: 0; }
+      .flow, .technique { grid-template-columns: 1fr; }
+      .flow div, .technique article { min-height: auto; border-inline-end: 0; border-block-end: 1px solid var(--line); }
+      .flow div:last-child, .technique article:last-child { border-block-end: 0; }
+      .boundary { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 23rem) {
+      .toolbar { position: static; }
+      .toolbar-actions button { flex: 1 1 calc(50% - 0.3rem); }
+      h1 { font-size: 3.1rem; }
+      .case-card div { grid-template-columns: 1fr; gap: 0.2rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+
+    @media (prefers-contrast: more) {
+      :root { --line-soft: var(--line); }
+      button, details, .panel, .side-note, .symptom-card, .related-grid article { border-width: 3px; }
+    }
+
+    @media (forced-colors: active) {
+      :root { --ink: CanvasText; --paper: Canvas; --surface: Canvas; --line: CanvasText; --orange: Highlight; }
+    }
+
+    @media print {
+      .toolbar, .skip-link, .status { display: none !important; }
+      body { background: #fff; color: #000; }
+      .shell { width: 100%; }
+      .hero { min-height: auto; padding-block: 1rem 2rem; }
+      .chapter { break-before: page; padding-block: 2rem; }
+      .side-note { position: static; }
+      .panel, details, .answer-box, pre { break-inside: avoid; box-shadow: none; }
+      a { text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+  <header class="toolbar">
+    <div class="brand" aria-label="开发面试知识复盘手册">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span>Interview knowledge dossier</span>
+    </div>
+    <nav class="toolbar-actions" aria-label="页面工具">
+      <button id="expand-all" type="button">展开</button>
+      <button id="collapse-all" type="button">收起</button>
+      <button id="theme-toggle" type="button" aria-pressed="false">深色</button>
+      <button id="print-page" type="button">打印</button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <div class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="kicker">Interview knowledge dossier</p>
+          <h1 id="page-title">开发面试知识复盘手册</h1>
+          <p class="hero-copy">这份手册持续记录真实面试中没有回答出来的问题。目前覆盖 <strong>Swift 与 iOS 性能、React、SSE 完整流程、Agent Harness、浏览器渲染</strong>。每章都保留项目证据、可直接复述的回答和继续追问时的展开方式。</p>
+        </div>
+        <aside class="case-card" aria-label="累计面试信息">
+          <p class="label">Interview files</p>
+          <dl>
+            <div><dt>累计</dt><dd>2 场技术面试</dd></div>
+            <div><dt>001</dt><dd>iOS 全栈开发实习生</dd></div>
+            <div><dt>002</dt><dd>某互联网公司 · React 与全栈追问</dd></div>
+            <div><dt>项目背景</dt><dd>PHASE iOS App 与小程序</dd></div>
+            <div><dt>工具背景</dt><dd>多数实现借助 Codex 和其他 Agent</dd></div>
+          </dl>
+        </aside>
+      </section>
+
+      <aside class="boundary">
+        <b>记录边界</b>
+        <p>Interview 001 的两个 Swift 原题名称没有记住，因此第一章覆盖高概率比较范围。Interview 002 已确认 React、性能、SSE、浏览器渲染与 Agent Harness 等问题方向。React 的具体小题没有逐字记录，手册按面试官追问路径整理常见核心细节。</p>
+      </aside>
+
+      <nav class="map" aria-label="知识章节">
+        <a href="#swift-types"><span>01</span><strong>Swift 类型与数据结构</strong><small>值语义、引用语义、常见集合</small></a>
+        <a href="#memory"><span>02</span><strong>iOS 内存管理</strong><small>ARC、循环引用、图片和工具</small></a>
+        <a href="#cpu"><span>03</span><strong>CPU、主线程与并发</strong><small>卡顿、Task、MainActor、Instruments</small></a>
+        <a href="#webview"><span>04</span><strong>WebView 与 Native</strong><small>渲染流程、定位方法、取舍</small></a>
+      </nav>
+
+      <p class="interview-map-label">Interview 002 · 某互联网公司</p>
+      <nav class="map" aria-label="第二场面试知识章节">
+        <a href="#react"><span>05</span><strong>React 与性能</strong><small>更新机制、Hooks、测量与 PHASE 实现</small></a>
+        <a href="#phase-sse"><span>06</span><strong>PHASE 聊天 SSE</strong><small>iOS、服务端、Agent 与持久化</small></a>
+        <a href="#browser-rendering"><span>07</span><strong>请求到页面像素</strong><small>HTML、CSS、JavaScript 与 React</small></a>
+        <a href="#agent-harness"><span>08</span><strong>Agent Harness</strong><small>准确率、工具防错、性能与效率</small></a>
+      </nav>
+
+      <section class="evidence-ledger" aria-labelledby="evidence-title">
+        <p class="label">Project evidence</p>
+        <h2 id="evidence-title">回答必须落回你做过的代码</h2>
+        <p>下面的项目连接来自 PHASE 仓库中的提交、PR 和当前源码。面试时先讲自己解决的具体资源问题，再补 Swift 或系统原理。这样既能证明你做过，也不会把 Agent 生成的代码全部说成自己独立设计。</p>
+        <div class="evidence-grid">
+          <article class="evidence-card">
+            <b>iOS · SSE 生命周期</b>
+            <strong>长连接会结束，任务也必须结束</strong>
+            <p>你提交了 SSE 客户端、终止时取消 Task、disconnect 与 deinit 清理，以及只在 MainActor 更新界面状态。</p>
+            <a href="https://github.com/phasebook-AI/phase-ios-app/pull/1">证据 · iOS PR #1</a>
+          </article>
+          <article class="evidence-card">
+            <b>iOS · 图片缓存</b>
+            <strong>缓存有容量，并发请求会合并</strong>
+            <p>PhaseImageCache 设置内存与磁盘容量、NSCache 上限、预取数量和并发数，并复用同一 URL 的进行中任务。</p>
+            <a href="https://github.com/phasebook-AI/phase-ios-app/commit/54dccb3c19271c1865fbc374a79453eba66e3c52">证据 · iOS 缓存提交</a>
+          </article>
+          <article class="evidence-card">
+            <b>iOS · 实时测肤</b>
+            <strong>摄像头帧需要节流和及时停止</strong>
+            <p>你实现了帧门控、停止视频回调、取消过期拍摄任务，并把照片分析和准备工作移出 MainActor。</p>
+            <a href="https://github.com/phasebook-AI/phase-ios-app/commit/12f06def6b60f5fec1eed691b2a28732250540c4">证据 · iOS 测肤提交</a>
+          </article>
+          <article class="evidence-card">
+            <b>MiniApp · 缓存与预取</b>
+            <strong>命中缓存也要控制资源规模</strong>
+            <p>你为图片预加载设置两路并发和 48 项上限，为页面数据加入请求去重、过期规则和容量限制。</p>
+            <a href="https://github.com/phasebook-AI/phase-frontend/commit/0bd1f40a6c863d7d990297af418d55972797c9f8">证据 · MiniApp 性能提交</a>
+          </article>
+          <article class="evidence-card">
+            <b>MiniApp · WebView</b>
+            <strong>只承担商品跳转，不承载核心交互</strong>
+            <p>项目中的 WebView 只接受自家后端的安全跳转地址。你后来改用微信原生导航，减少自定义页面层。</p>
+            <a href="https://github.com/phasebook-AI/phase-frontend/commit/26bd015fd035fa268c6a725bfada3a0d0ba6fab3">证据 · 原生导航提交</a>
+          </article>
+          <article class="evidence-card">
+            <b>Honest boundary</b>
+            <strong>代码控制已完成，系统测量仍需补做</strong>
+            <p>仓库可以证明任务取消、缓存上限、节流和测试。现有材料不能证明你用 Instruments 得到了内存或 CPU 的前后对比数字。</p>
+          </article>
+        </div>
+        <p class="truth-line"><strong>面试表达边界</strong>　可以说“我在代码层做了资源控制，并通过单元测试验证并发去重和清理行为”。暂时不要说“我用 Instruments 把内存降低了多少”或“CPU 降低了多少”。</p>
+      </section>
+
+      <section class="chapter" id="swift-types" aria-labelledby="swift-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">01</div>
+          <div>
+            <h2 id="swift-title">Swift 类型与数据结构</h2>
+            <p class="chapter-intro">这一组问题在检查你是否理解 Swift 数据怎样复制、共享和查找。它也是 ARC、SwiftUI 状态和并发安全的入口。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>struct 与 enum 是值类型</li>
+              <li>class 是引用类型</li>
+              <li>值语义不等于一定放在栈上</li>
+              <li>Array、Set、Dictionary 的用途和查找差异</li>
+              <li>SwiftUI 的 View 经常使用 struct</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">Part A · struct 与 class</p>
+              <h3>两者都能保存属性和方法，差别集中在语义与能力</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>比较项</th><th>struct</th><th>class</th></tr></thead>
+                  <tbody>
+                    <tr><td>语义</td><td>值类型</td><td>引用类型</td></tr>
+                    <tr><td>赋值和传参</td><td>产生独立的值语义</td><td>多个变量可以引用同一个实例</td></tr>
+                    <tr><td>继承</td><td>不支持类继承</td><td>支持继承与运行时类型转换</td></tr>
+                    <tr><td>身份判断</td><td>通常比较值是否相等</td><td>可用 <code>===</code> 判断是否同一实例</td></tr>
+                    <tr><td>生命周期</td><td>不由 ARC 引用计数管理</td><td>类实例由 ARC 管理</td></tr>
+                    <tr><td>选择建议</td><td>数据模型、不可变描述、容易推理的状态</td><td>需要共享身份、继承或引用生命周期的对象</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <pre><code><span class="keyword">struct</span> <span class="type">Profile</span> {
+  <span class="keyword">var</span> name: <span class="type">String</span>
+}
+
+<span class="keyword">var</span> first = Profile(name: <span class="string">"Andy"</span>)
+<span class="keyword">var</span> second = first
+second.name = <span class="string">"Alex"</span>
+
+<span class="comment">// first.name 仍然是 Andy</span>
+
+<span class="keyword">final class</span> <span class="type">Session</span> {
+  <span class="keyword">var</span> token = <span class="string">"A"</span>
+}
+
+<span class="keyword">let</span> one = Session()
+<span class="keyword">let</span> two = one
+two.token = <span class="string">"B"</span>
+
+<span class="comment">// one.token 也变成 B，因为两者引用同一实例</span></code></pre>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part B · 值类型与引用类型</p>
+              <h3>面试回答要讲复制行为，别把它简化成栈和堆</h3>
+              <p>值类型的关键是值语义。变量得到自己的逻辑值，修改副本不会改变原值。引用类型的变量保存对实例的引用，多个引用可以观察并修改同一个对象。</p>
+              <p>编译器可以决定具体存储位置，标准库集合还使用写时复制降低复制成本。因此“值类型一定在栈上，引用类型一定在堆上”不够准确。</p>
+              <div class="fact-list">
+                <div class="fact"><strong>写时复制</strong><p>Array、Dictionary 和 String 的副本可以先共享底层存储，某个副本发生修改时再复制。</p></div>
+                <div class="fact"><strong>并发影响</strong><p>独立的值更容易隔离。共享可变引用需要 actor、锁或其他同步策略保护。</p></div>
+                <div class="fact"><strong>let 的差异</strong><p><code>let</code> struct 不能修改其可变属性。<code>let</code> class 引用不能改指向，但实例的 <code>var</code> 属性仍可能改变。</p></div>
+                <div class="fact"><strong>相等与同一</strong><p><code>==</code> 表示定义上的值相等，<code>===</code> 只用于类引用，判断是否同一个实例。</p></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part C · Array、Set、Dictionary</p>
+              <h3>先看数据关系，再谈性能</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>类型</th><th>适合什么数据</th><th>顺序与重复</th><th>典型性能</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>Array</code></td><td>有顺序的元素列表，需要按索引访问</td><td>保留顺序，允许重复</td><td>按索引通常 O(1)，查找通常 O(n)</td></tr>
+                    <tr><td><code>Set</code></td><td>唯一元素集合，频繁判断是否存在</td><td>不承诺业务顺序，不允许重复</td><td>平均查找与插入 O(1)，元素需 Hashable</td></tr>
+                    <tr><td><code>Dictionary</code></td><td>通过唯一 key 查找 value</td><td>key 唯一，业务上不依赖遍历顺序</td><td>平均查找与更新 O(1)，key 需 Hashable</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>大 O 表示输入规模增长时的趋势。哈希集合的 O(1) 是平均情况，不能解释成任何输入下都只执行一步。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part D · SwiftUI 为什么大量使用 struct</p>
+              <h3>View 是界面描述，状态存储由 SwiftUI 管理</h3>
+              <p>SwiftUI 会根据输入和状态重新计算视图描述。轻量的 struct 便于创建和比较。使用 <code>@State</code> 时，实际状态存储由 SwiftUI 管理，View 值被重新创建不等于状态立刻丢失。</p>
+              <pre><code><span class="keyword">struct</span> <span class="type">CounterView</span>: View {
+  @State <span class="keyword">private var</span> count = 0
+
+  <span class="keyword">var</span> body: <span class="keyword">some</span> View {
+    Button(<span class="string">"Count \(count)"</span>) {
+      count += 1
+    }
+  }
+}
+
+<span class="keyword">struct</span> <span class="type">CounterButton</span>: View {
+  @Binding <span class="keyword">var</span> count: Int
+  <span class="comment">// Binding 不拥有状态，只提供读写连接</span>
+}</code></pre>
+              <p><code>@State</code> 适合视图拥有的短期界面状态。<code>@Binding</code> 让子视图读写其他位置拥有的状态。跨多个视图共享的模型可使用 Observation，并把状态放在需要它的视图共同祖先处。</p>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">PHASE 里的真实类型选择</p>
+              <h3>类型和数据结构都对应一个具体关系</h3>
+              <ul class="proof-list">
+                <li><code>ChatViewModel</code> 使用可观察的 final class，因为聊天消息、连接状态和进行中的任务需要稳定身份，并由多个界面更新。</li>
+                <li><code>PhaseImageCache</code> 使用 actor 隔离共享缓存状态，其中 <code>[URL: Task&lt;LoadedImage, Error&gt;]</code> 通过 URL 查找进行中的任务，让相同图片请求共享一次网络加载。</li>
+                <li><code>LoadedImage</code> 使用 struct 表达一次加载得到的图片与成本。它是传递结果的值，没有共享身份需求。</li>
+                <li>小程序的图片预加载使用 <code>Map</code> 保存 URL 与本地路径，用 <code>Set</code> 记录需要删除的持久文件，并用队列维持加载顺序。</li>
+              </ul>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的九十秒回答</p>
+              <blockquote>我会按数据有没有共享身份来选择类型。PHASE 的 SwiftUI View 大多是 struct，它们描述当前界面；聊天 ViewModel 则是 class，因为消息、连接状态和正在运行的 Task 需要稳定身份并持续更新。图片缓存里我用了 actor 管理共享状态，又用 Dictionary 保存 URL 到进行中 Task 的映射。这样收到同一张图片的并发请求时，可以先查 Dictionary 并复用任务。一次图片加载的结果使用 struct，因为它只携带图片和成本，不需要共享身份。这些选择分别利用了值语义、引用身份和哈希查找。</blockquote>
+              <footer>回答顺序 · 业务关系 → 具体类型 → 数据结构 → 产生的效果</footer>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>值类型是不是一定存储在栈上</summary><div class="detail-body"><p>不能这样保证。值语义描述复制和共享行为，具体存储由编译器和运行时决定。值可能被优化、内联，也可能存在堆分配中。</p></div></details>
+              <details><summary>Array 赋值时会立即复制全部元素吗</summary><div class="detail-body"><p>标准库集合通常使用写时复制。两个值可以暂时共享底层存储，某个副本修改时才确保得到独立存储。</p></div></details>
+              <details><summary>什么时候会选 Set 而不是 Array</summary><div class="detail-body"><p>数据要求唯一，并且频繁判断元素是否存在时，Set 更合适。若界面依赖顺序、重复元素或索引访问，Array 更自然。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="memory" aria-labelledby="memory-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">02</div>
+          <div>
+            <h2 id="memory-title">iOS 内存管理</h2>
+            <p class="chapter-intro">面试官问“你开发时怎样处理内存”，期待听到 ARC、泄漏、资源占用和测量方法。只说 Swift 会自动管理内存不够。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>ARC 管理类实例的生命周期</li>
+              <li>强引用循环会阻止释放</li>
+              <li>weak 与 unowned 不增加强引用计数</li>
+              <li>图片解码、缓存和 WebView 可能大量占用内存</li>
+              <li>使用 Memory Graph 与 Instruments 测量</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">Part A · ARC</p>
+              <h3>ARC 通过强引用判断类实例是否仍被需要</h3>
+              <p>创建类实例以后，每一个强引用都会让实例继续存活。当最后一个强引用消失，ARC 可以释放实例并调用 <code>deinit</code>。ARC 主要管理类实例；struct 和 enum 是值类型，不通过类实例引用计数管理。</p>
+              <div class="flow">
+                <div><b>01</b><strong>创建实例</strong><small>建立 class 对象</small></div>
+                <div><b>02</b><strong>强引用持有</strong><small>属性、局部变量或闭包引用</small></div>
+                <div><b>03</b><strong>引用关系变化</strong><small>页面退出、任务结束或属性置空</small></div>
+                <div><b>04</b><strong>强引用归零</strong><small>没有对象继续持有实例</small></div>
+                <div><b>05</b><strong>释放资源</strong><small>运行 deinit，回收实例内存</small></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part B · strong、weak、unowned</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>引用</th><th>是否保持对象存活</th><th>访问形式</th><th>典型使用</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>strong</code></td><td>会</td><td>普通引用</td><td>默认所有权关系</td></tr>
+                    <tr><td><code>weak</code></td><td>不会</td><td>必须是可选值，对象释放后自动变 nil</td><td>delegate、可能先释放的回调对象</td></tr>
+                    <tr><td><code>unowned</code></td><td>不会</td><td>通常非可选，对象释放后继续访问会崩溃</td><td>生命周期严格依赖且能保证对方更长时</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>不确定生命周期时，weak 通常更安全。unowned 依赖明确的生命周期保证，不能为了少写可选处理随便使用。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part C · 循环引用</p>
+              <h3>对象互相强持有，或者对象强持有捕获自己的闭包</h3>
+              <pre><code><span class="keyword">final class</span> <span class="type">FeedViewModel</span> {
+  <span class="keyword">var</span> onUpdate: (() -> Void)?
+
+  <span class="keyword">func</span> bind() {
+    onUpdate = { [<span class="keyword">weak</span> self] <span class="keyword">in</span>
+      <span class="keyword">guard let</span> self <span class="keyword">else</span> { <span class="keyword">return</span> }
+      self.refreshVisibleRows()
+    }
+  }
+
+  <span class="keyword">deinit</span> {
+    <span class="comment">// 用于确认页面退出后对象是否真的释放</span>
+  }
+}</code></pre>
+              <p>闭包并非一律需要 <code>[weak self]</code>。先判断闭包由谁持有、执行多久、对象是否应该被任务保持。盲目使用 weak 可能让必要工作提前消失。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part D · iOS 项目常见内存来源</p>
+              <div class="symptom-grid">
+                <article class="symptom-card"><h4>图片和视频</h4><p>压缩文件大小不等于解码后的内存。4000 × 3000 的 RGBA 图片粗略需要约 48 MB，还可能产生缩放和缓存副本。</p></article>
+                <article class="symptom-card"><h4>无上限缓存</h4><p>缓存提高复用速度，也可能持续增长。需要数量或总成本上限，并在系统压力或业务边界下释放。</p></article>
+                <article class="symptom-card"><h4>长生命周期任务</h4><p>Task、Timer、通知、SSE 回调和 Combine 订阅可能继续持有页面或模型。页面离开后应取消不再需要的工作。</p></article>
+                <article class="symptom-card"><h4>WebView 与脚本</h4><p>网页内容、JavaScript、图片和 WebKit 进程都会占用内存。重复创建 WebView 或页面资源过重需要单独观察。</p></article>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part E · 实际排查顺序</p>
+              <h3>用同一条用户路径比较基线、峰值和退出后的回落</h3>
+              <ol>
+                <li>在真机复现进入页面、滚动、加载内容和退出页面。</li>
+                <li>查看 Xcode Debug navigator 的 Memory Report，记录当前值和峰值。</li>
+                <li>打开 Debug Memory Graph，检查本应释放的 ViewModel、控制器和 WebView 是否仍有引用路径。</li>
+                <li>使用 Allocations 查看分配随操作怎样增长，必要时使用 Leaks 查泄漏。</li>
+                <li>修复后重复完全相同的路径，确认对象数量和内存曲线能够稳定或回落。</li>
+              </ol>
+              <p>模拟器适合观察对象关系，但不能证明真机内存安全。Apple 明确提醒，模拟器内存仪表保持绿色不代表设备不会因内存压力终止 App。</p>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的九十秒回答</p>
+              <blockquote>我在 PHASE 里主要从对象生命周期和资源上限两方面处理内存。长连接方面，我把 SSE 读取放在 Task 里，闭包使用 weak self；用户断开、流结束或对象释放时都会取消任务，避免连接和 ViewModel 被长期持有。图片方面，我做了 PhaseImageCache，给 NSCache 配置 300 项和 24 MB 的成本预算，URLCache 配置 24 MB 内存与 120 MB 磁盘；相同 URL 的并发请求复用一个进行中的 Task，清理缓存时也会取消未完成任务。小程序里我也给富内容、页面数据和图片缓存设置了条目或字节上限，并在账号切换时清空用户态缓存。现有单元测试验证了请求去重、预取限制、淘汰和清理行为。我当时没有形成 Instruments 的前后对比数字，所以我会把这部分说成代码层资源控制，后续再用 Memory Graph 和 Allocations 验证实际内存曲线。</blockquote>
+              <footer>回答顺序 · 生命周期 → 缓存上限 → 并发去重 → 测试 → 测量边界</footer>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">PHASE 内存证据</p>
+              <h3>这些细节可以经得住代码追问</h3>
+              <ul class="proof-list">
+                <li><strong>SSE 生命周期</strong>　<code>UserEventsSSEClient</code> 在 connect 任务中使用 <code>[weak self]</code>，disconnect 和 deinit 都会取消任务。<code>ChatSSEClient</code> 在流终止回调里取消读取任务。<a href="https://github.com/phasebook-AI/phase-ios-app/pull/1">查看 PR #1</a></li>
+                <li><strong>图片缓存上限</strong>　<code>NSCache</code> 设置 300 项和 24 MB 成本预算，URLCache 使用 24 MB 内存与 120 MB 磁盘。预取最多 12 个 URL，批次并发最多 4 个。<a href="https://github.com/phasebook-AI/phase-ios-app/commit/54dccb3c19271c1865fbc374a79453eba66e3c52">查看缓存提交</a></li>
+                <li><strong>小程序持久缓存</strong>　富卡片最多 60 项和 512 KB；当前 SWR 持久缓存最多 32 项、总量 1 MB、单项 256 KB，并按账号隔离。<a href="https://github.com/phasebook-AI/phase-frontend/commit/24f67fb1d8dafeb30103b18d09c94d3b7065c8e2">查看富内容提交</a></li>
+                <li><strong>验证边界</strong>　测试覆盖相同图片请求去重、预取数量、缓存淘汰和清理后旧请求不能重新写回。仓库里没有一份可以支持“内存下降多少 MB”的 Instruments 报告。</li>
+              </ul>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>ARC 能不能解决所有内存问题</summary><div class="detail-body"><p>不能。ARC 可以在强引用归零时释放类实例，但无法自动打破强引用循环，也无法替你限制图片、缓存和 WebView 的资源规模。</p></div></details>
+              <details><summary>weak 和 unowned 怎么选</summary><div class="detail-body"><p>对象可能先释放，使用 weak 并处理 nil。生命周期严格保证对方始终存在时可以考虑 unowned，但保证失效以后继续访问会崩溃。</p></div></details>
+              <details><summary>内存上涨就是泄漏吗</summary><div class="detail-body"><p>不一定。缓存、图片解码和系统框架可能保留可复用资源。需要观察对象是否按预期释放、内存是否无限增长，以及在稳定操作后能否达到平台可接受的平衡。</p></div></details>
+              <details><summary>你为什么把图片缓存设成这些上限</summary><div class="detail-body"><p>这些数值是项目里的资源预算，目的是阻止缓存无限增长，同时保留社区列表的重复访问体验。可以准确说出 NSCache 的 24 MB 成本预算和 300 项、URLCache 的 120 MB 磁盘、12 个预取和 4 路并发。现有材料没有证明它们是经过多设备 profiling 得到的最优值，因此可以说后续会用真机内存压力和命中率继续校准。</p></div></details>
+              <details><summary>24 MB 是否代表图片实际只占 24 MB</summary><div class="detail-body"><p>不能这样保证。当前代码传给 NSCache 的 cost 是下载 Data 的字节数，压缩图片解码后的像素内存可能更大；NSCache 的淘汰也带有系统自主性。更严谨的改进是按解码后的像素尺寸估算成本，再用真机内存曲线校准预算。</p></div></details>
+              <details><summary>你怎样证明任务真的被释放</summary><div class="detail-body"><p>现有代码证据包括 disconnect、deinit、流终止回调和 clear 中的取消路径，测试还覆盖了清理以后迟到响应不能重新写回缓存。更完整的验证会在真机重复进入和退出相关页面，再用 Memory Graph 检查对象引用路径，用 Allocations 观察曲线是否回落。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="cpu" aria-labelledby="cpu-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">03</div>
+          <div>
+            <h2 id="cpu-title">CPU、主线程与并发</h2>
+            <p class="chapter-intro">CPU 问题要从用户现象出发。滚动掉帧、点击不响应和启动慢都可能与主线程有关，但高 CPU 与线程阻塞需要不同处理。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>主线程负责用户事件和界面更新</li>
+              <li>忙碌主线程与阻塞主线程不同</li>
+              <li>async 不保证自动转到后台线程</li>
+              <li>MainActor 隔离 UI 相关状态</li>
+              <li>使用 Time Profiler 和 Hangs 找热点</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">Part A · CPU 问题怎样表现</p>
+              <div class="symptom-grid">
+                <article class="symptom-card"><h4>忙碌主线程</h4><p>主线程持续做计算、解析、布局或绘制，CPU 较高，来不及处理输入和下一帧。</p></article>
+                <article class="symptom-card"><h4>阻塞主线程</h4><p>主线程等待锁、同步 I/O 或其他线程。此时界面同样无响应，CPU 却可能并不高。</p></article>
+                <article class="symptom-card"><h4>后台 CPU 过高</h4><p>高频轮询、图像处理、解析或失控任务可能耗电和发热，即使界面暂时不卡。</p></article>
+                <article class="symptom-card"><h4>SwiftUI 重复工作</h4><p>状态范围过大、列表身份不稳定、body 中计算过重，会让界面反复执行不必要的工作。</p></article>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part B · async、Task 和 MainActor</p>
+              <h3>异步表示可以暂停，不能直接等同于后台线程</h3>
+              <p>Swift 并发运行时在任务和线程之间调度工作。异步函数暂停以后，恢复时不保证使用原来的线程。直接创建的 <code>Task</code> 还会继承当前 actor 隔离。如果它从 MainActor 环境创建，闭包中的同步重计算仍可能占用主线程。</p>
+              <div class="fact-list">
+                <div class="fact"><strong><code>await</code></strong><p>标记可能暂停的位置。等待网络时可以释放执行线程，不代表 await 后的所有工作都在后台。</p></div>
+                <div class="fact"><strong><code>Task</code></strong><p>创建异步工作，继承当前优先级、actor 隔离和任务局部值。需要管理取消和生命周期。</p></div>
+                <div class="fact"><strong><code>@MainActor</code></strong><p>让 UI 状态和相关方法在主 actor 上串行访问，避免手动到处切换主队列。</p></div>
+                <div class="fact"><strong><code>actor</code></strong><p>隔离共享可变状态，一次只允许一个任务访问 actor 隔离的代码。</p></div>
+              </div>
+              <pre><code>@MainActor
+<span class="keyword">final class</span> <span class="type">FeedViewModel</span> {
+  <span class="keyword">private var</span> loadTask: Task&lt;Void, Never&gt;?
+  <span class="keyword">private(set) var</span> items: [Item] = []
+
+  <span class="keyword">func</span> refresh() {
+    loadTask?.cancel()
+    loadTask = Task {
+      <span class="keyword">do</span> {
+        <span class="keyword">let</span> data = <span class="keyword">try await</span> api.fetchFeed()
+        <span class="comment">// 网络等待不会持续占用主线程</span>
+        <span class="comment">// 大量同步解析仍需单独评估执行位置</span>
+        items = <span class="keyword">try</span> decoder.decode([Item].self, from: data)
+      } <span class="keyword">catch is</span> CancellationError {
+        <span class="keyword">return</span>
+      } <span class="keyword">catch</span> {
+        handle(error)
+      }
+    }
+  }
+
+  <span class="keyword">deinit</span> { loadTask?.cancel() }
+}</code></pre>
+              <p>示例中的解码是否需要移出 MainActor，取决于数据量和测量结果。小数据直接处理可能更简单。大数据导致主线程热点时，再把纯计算放入适合的并发域，并保证传递的数据满足并发安全要求。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part C · SwiftUI CPU 检查点</p>
+              <ul class="checklist">
+                <li>让 <code>body</code> 保持廉价，不在其中同步解析大 JSON、处理图片或排序大型数据。</li>
+                <li>把状态放在真正需要它的最小范围，避免一个变化让大面积视图重新计算。</li>
+                <li>列表使用稳定身份，不用会随刷新改变的随机 ID。</li>
+                <li>搜索、滚动和传感器事件需要节流或防抖，避免每次输入都触发昂贵操作。</li>
+                <li>取消离开页面后没有意义的 Task、Timer、SSE 和轮询。</li>
+                <li>图片按显示尺寸解码，避免主线程反复缩放大图。</li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part D · 性能工具</p>
+              <h3>先复现，再在时间线上找到具体函数</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>工具</th><th>回答什么问题</th><th>看什么</th></tr></thead>
+                  <tbody>
+                    <tr><td>Time Profiler</td><td>CPU 时间花在哪些函数</td><td>主线程调用树、Self Weight、重复热点</td></tr>
+                    <tr><td>Hangs</td><td>哪一段用户操作出现无响应</td><td>忙碌或阻塞的主线程区间</td></tr>
+                    <tr><td>Points of Interest</td><td>业务动作与性能区间怎样对应</td><td>登录、刷新、解析等自定义标记</td></tr>
+                    <tr><td>Xcode Organizer</td><td>真实用户设备上的启动与卡顿趋势</td><td>可用的发布后性能指标</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>优化目标应当连接到用户路径。单看一个瞬间 CPU 百分比无法说明哪段代码值得修改。</p>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的九十秒回答</p>
+              <blockquote>PHASE 里最典型的 CPU 场景是实时测肤。相机每秒会产生很多帧，如果每帧都做人脸和画质分析，会造成重复计算。我在 iOS 端加了 0.12 秒的帧门控，拍照开始后立即移除视频帧回调；照片质量分析和裁剪准备通过 Task.detached 执行，界面状态再回到 MainActor 更新。页面进入后台或离开时会取消拍摄 Task、停止相机和语音。小程序端也用了相同原则，实时分析至少间隔 180 毫秒，并用 inFlight 标记保证同一时间只有一次检测；组件卸载时停止帧监听并释放检测器。图片预加载和页面预取各限制为两路并发，避免进入页面时同时启动大量请求。现有代码和测试能证明节流、取消和并发限制；我还没有 Time Profiler 的前后数据，所以不会声称 CPU 具体下降了多少。</blockquote>
+              <footer>回答顺序 · 高成本场景 → 节流 → 单任务 → 移出主线程 → 生命周期清理 → 证据边界</footer>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">PHASE CPU 证据</p>
+              <h3>从相机帧和预取任务讲最有说服力</h3>
+              <ul class="proof-list">
+                <li><strong>iOS 帧门控</strong>　<code>SkinLiveFrameGate</code> 只接受间隔至少 0.12 秒的帧。开始拍照、进入后台或页面退出时移除视频回调并停止相机。</li>
+                <li><strong>iOS 计算位置</strong>　最终照片分析和图片准备放进 <code>Task.detached</code>，处理完成后才回到 MainActor 更新阶段和结果。<a href="https://github.com/phasebook-AI/phase-ios-app/commit/12f06def6b60f5fec1eed691b2a28732250540c4">查看测肤提交</a></li>
+                <li><strong>MiniApp 单任务门闩</strong>　实时分析最小间隔为 180 毫秒，<code>inFlightRef</code> 阻止上一次检测未结束时继续提交帧，卸载时停止 listener 并 dispose provider。</li>
+                <li><strong>MiniApp 并发预算</strong>　图片预加载与页面预取默认并发都是 2，URL 和 key 相同时复用进行中的 Promise。<a href="https://github.com/phasebook-AI/phase-frontend/commit/0bd1f40a6c863d7d990297af418d55972797c9f8">查看性能提交</a></li>
+              </ul>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>async 函数会自动在后台线程执行吗</summary><div class="detail-body"><p>不会这样保证。async 表示函数可以暂停。任务由 Swift 并发运行时调度，Task 还可能继承当前 actor。UI 代码通常由 MainActor 隔离。</p></div></details>
+              <details><summary>CPU 使用高一定是问题吗</summary><div class="detail-body"><p>不一定。短时间完成用户主动触发的重计算可能合理。持续高占用、卡顿、发热和耗电更值得处理，仍需结合用户路径和时间线判断。</p></div></details>
+              <details><summary>高 CPU 和主线程卡住有什么区别</summary><div class="detail-body"><p>忙碌主线程通常持续执行代码，CPU 较高。阻塞主线程在等待锁或同步资源，CPU 可能较低。两者都会导致界面无响应，但修复方向不同。</p></div></details>
+              <details><summary>为什么不能处理每一帧</summary><div class="detail-body"><p>相机帧率通常高于界面提示和自动拍摄需要的判断频率。分析速度跟不上输入速度时，旧帧会排队，占用 CPU 并增加结果延迟。PHASE 的处理方式是限制采样间隔，并保证同一时间只有一次检测，让系统始终处理较新的帧。</p></div></details>
+              <details><summary>为什么使用 Task.detached</summary><div class="detail-body"><p>SkinScanViewModel 由 MainActor 管理界面状态。如果直接在继承 MainActor 的任务里做同步图像分析，可能阻塞界面。最终照片分析和准备属于不直接操作 UI 的纯计算，因此放到 detached task，完成以后再回到 MainActor。使用时仍要确保传入对象满足并发安全。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="webview" aria-labelledby="webview-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">04</div>
+          <div>
+            <h2 id="webview-title">WebView 与 Native View 性能</h2>
+            <p class="chapter-intro">这道题不要求你笼统证明 Native 永远更快。面试官想看你是否能拆开加载、脚本、布局、绘制和 Native 通信，并按瓶颈选择工具。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>WKWebView 运行 HTML、CSS 和 JavaScript</li>
+              <li>卡顿可能来自网络、JS、布局、绘制或 Bridge</li>
+              <li>WebView 不一定在所有场景都慢</li>
+              <li>Safari Web Inspector 可以分析网页时间线</li>
+              <li>高频关键交互可考虑局部 Native 化</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">Part A · 两条渲染路径</p>
+              <h3>WebView 多了一套网页运行环境</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>Native View</th><th>WKWebView</th></tr></thead>
+                  <tbody>
+                    <tr><td>SwiftUI 或 UIKit 状态变化</td><td>加载 HTML、CSS、JavaScript 和其他资源</td></tr>
+                    <tr><td>框架计算布局与视图更新</td><td>解析文档，建立 DOM 与样式关系</td></tr>
+                    <tr><td>Core Animation 组织图层并合成</td><td>JavaScript 执行，网页布局、绘制与合成</td></tr>
+                    <tr><td>直接调用平台控件和手势系统</td><td>需要时通过消息机制与 Native 通信</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>现代 WebKit 本身做了大量优化，还使用独立进程隔离网页内容。静态文章、帮助页和更新频繁的运营内容可能非常适合 WebView。复杂动画、高频手势和大量跨端通信更容易暴露额外成本。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part B · 先判断卡在哪里</p>
+              <div class="symptom-grid">
+                <article class="symptom-card"><h4>首屏慢</h4><p>检查网络、重定向、缓存、资源体积、阻塞脚本和首屏 CSS。不要直接归因于 WebView 渲染。</p></article>
+                <article class="symptom-card"><h4>滚动掉帧</h4><p>检查大图、复杂 DOM、固定定位、阴影滤镜、频繁布局和滚动事件中的长任务。</p></article>
+                <article class="symptom-card"><h4>点击后延迟</h4><p>检查 JavaScript 主线程长任务、同步操作、频繁状态更新和事件处理。</p></article>
+                <article class="symptom-card"><h4>Native 交互慢</h4><p>检查 Bridge 调用频率、消息体大小、JSON 序列化和两端往返次数。</p></article>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part C · 测量工具</p>
+              <h3>网页问题用 Web Inspector，App 进程问题用 Instruments</h3>
+              <ul>
+                <li>打开 Safari Develop 菜单连接可检查的 WKWebView，使用 Timelines 查看 Network Requests、JavaScript、Layout 与 Rendering。</li>
+                <li>使用 Xcode Instruments 的 Time Profiler 和 Hangs 查看 App 主线程与 Native Bridge 处理。</li>
+                <li>记录页面导航开始、首个可见内容、可交互时间和一次关键手势，避免只凭主观感受。</li>
+                <li>在真机和接近真实的网页内容下测试，开发环境的本地网络可能掩盖问题。</li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part D · 对应优化</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>瓶颈</th><th>优先动作</th><th>验证</th></tr></thead>
+                  <tbody>
+                    <tr><td>网络与资源</td><td>压缩图片、正确缓存、减少阻塞资源和无意义重定向</td><td>比较网络瀑布和首屏时间</td></tr>
+                    <tr><td>JavaScript</td><td>拆分长任务、减少同步计算、避免高频事件做重活</td><td>查看 JS 时间线与 Long Task</td></tr>
+                    <tr><td>布局与绘制</td><td>简化 DOM、避免反复读取并修改布局、减少昂贵视觉效果</td><td>比较 Layout 和 Rendering 区间</td></tr>
+                    <tr><td>Bridge</td><td>合并消息、减少往返、缩小 payload、避免每帧通信</td><td>统计调用次数和往返延迟</td></tr>
+                    <tr><td>场景不适配</td><td>将高频、关键、平台感强的局部交互改为 Native</td><td>比较用户路径与维护成本</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part E · 怎样做技术取舍</p>
+              <div class="fact-list">
+                <div class="fact"><strong>适合 WebView</strong><p>文章、帮助中心、活动页、服务端频繁更新的内容，以及跨平台复用价值较高的页面。</p></div>
+                <div class="fact"><strong>适合 Native</strong><p>核心导航、高频手势、复杂动画、相机与系统能力、无障碍要求高且需要平台一致体验的功能。</p></div>
+                <div class="fact"><strong>适合混合</strong><p>正文由 WebView 展示，导航、支付、相机和关键操作由 Native 控制。需要清晰定义 Bridge 合约。</p></div>
+                <div class="fact"><strong>不应使用的判断</strong><p>仅凭“Web 技术慢”或“Native 开发贵”做决定。性能、发布速度、维护人力和产品体验都要进入选择。</p></div>
+              </div>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的九十秒回答</p>
+              <blockquote>PHASE iOS App 中没有使用 WKWebView。小程序里的 WebView 只服务商品购买跳转，它接受经过校验的自家后端 /api/go 地址，再由后端重定向到零售商页面，没有承载聊天、测肤或复杂交互。我做过的实际处理是缩小 WebView 的职责，并把该页面的自定义导航换成微信原生导航；核心功能继续使用 SwiftUI 或小程序原生组件。我当时没有对这个 WebView 做过完整性能 profiling，所以不能声称解决了 WebView 卡顿。如果线上出现慢的问题，我会先看 /api/go 重定向和资源网络时间，再区分 JavaScript、布局绘制与 Bridge 成本。内容页可以继续保留 WebView，高频手势或关键交互经过测量后再局部原生化。</blockquote>
+              <footer>回答顺序 · 项目真实用途 → 已做处理 → 明确缺口 → 定位方法 → 取舍</footer>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">PHASE WebView 证据</p>
+              <h3>这道题最重要的是承认你实际做到哪里</h3>
+              <ul class="proof-list">
+                <li><strong>实际范围</strong>　仓库中的 <code>ProductWebView</code> 只有一个 WebView，作用是打开商品购买链接。PHASE iOS 源码中没有 WKWebView。</li>
+                <li><strong>安全与边界</strong>　页面只接受与配置 API 同源且路径为 <code>/api/go</code> 的地址，避免深链把它变成任意网页容器。</li>
+                <li><strong>你做过的原生化</strong>　你把 WebView 页面的自定义导航改成微信原生导航；改动减少了一层自定义页面控件，但提交没有提供卡顿前后的数据。<a href="https://github.com/phasebook-AI/phase-frontend/commit/26bd015fd035fa268c6a725bfada3a0d0ba6fab3">查看原生导航提交</a></li>
+                <li><strong>不能声称的内容</strong>　项目里没有复杂 JavaScript Bridge 优化、DOM 重构或 Web Inspector 时间线报告。面试时应当把这些说成下一步排查方法。</li>
+              </ul>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>WebView 一定比 Native View 慢吗</summary><div class="detail-body"><p>不一定。内容简单、WebKit 优化良好、资源缓存合理时，WebView 可以满足体验要求。复杂布局、长 JavaScript 任务、高频 Bridge 和平台交互会增加风险。</p></div></details>
+              <details><summary>怎样区分网络慢和渲染卡</summary><div class="detail-body"><p>查看网络瀑布、资源完成时间和页面时间线。资源下载结束以后仍有长脚本、布局或绘制区间，问题更接近渲染或 JavaScript。</p></div></details>
+              <details><summary>Bridge 为什么有性能成本</summary><div class="detail-body"><p>消息需要跨网页与 Native 边界传递，通常包含序列化、调度和回调。少量业务调用影响可能很小，高频或大 payload 调用会累积延迟。</p></div></details>
+              <details><summary>面试官追问你实际解决过 WebView 卡顿吗</summary><div class="detail-body"><p>可以直接回答没有做过系统的 WebView 卡顿优化。随后说明 PHASE 的 WebView 只用于商品跳转，自己做过职责收窄和原生导航；再给出网络、脚本、布局与 Bridge 的排查顺序。诚实承认缺口比编造一次 profiling 更安全。</p></div></details>
+              <details><summary>为什么换成微信原生导航</summary><div class="detail-body"><p>原生导航与微信的返回行为、状态栏和手势更一致，也减少维护自定义导航布局和适配的工作。这个提交主要是体验与平台一致性改进，不能自动等同于 WebView 渲染性能提升。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="interview-divider" aria-labelledby="interview-002-title">
+        <p class="label">Interview 002 · 某互联网公司</p>
+        <h2 id="interview-002-title">这次卡住的是四组执行机制</h2>
+        <p>React 细节、性能实现、SSE、浏览器渲染和 Agent Harness 分布在不同层。面试官在连续检查同一种能力。你能否从一次状态变化或网络请求开始，沿着框架、运行时、服务端和界面一路讲到用户看到结果。</p>
+        <div class="signal-strip">
+          <div><b>React</b><p>会写组件和 Hooks，缺少触发更新、Render、Commit 与浏览器绘制之间的口头解释。</p></div>
+          <div><b>性能</b><p>知道缓存和预取等做法，回答时没有先定位瓶颈，再说明测量与验证。</p></div>
+          <div><b>PHASE AGENT</b><p>SSE 主链路与 Agent 工具循环还没有连成完整 Harness，也缺少准确率和失败恢复的度量边界。</p></div>
+          <div><b>浏览器</b><p>HTML、CSS、JavaScript、React 和浏览器渲染的责任边界还没有建立。</p></div>
+        </div>
+      </section>
+
+      <section class="chapter" id="react" aria-labelledby="react-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">05</div>
+          <div>
+            <h2 id="react-title">React 细节与性能实现</h2>
+            <p class="chapter-intro">这一组问题要先讲清 React 怎样更新界面，再谈怎样减少无效工作。性能回答需要带着测量目标，不能只报出 memo、useMemo 和 useCallback 的名字。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>状态更新会排队触发 Render</li>
+              <li>Render 调用组件并计算下一份界面描述</li>
+              <li>Commit 把必要变化应用到真实宿主环境</li>
+              <li>key 帮助 React 识别列表项身份</li>
+              <li>memoization 需要有测量依据</li>
+              <li>Taro 小程序最终通过 setData 驱动视图层</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">Part A · 一次 React 更新</p>
+              <h3>一次更新会经过触发、计算差异、提交与绘制</h3>
+              <div class="flow">
+                <div><b>01</b><strong>Trigger</strong><small>首次挂载，或者 state、props、context、外部 store 发生变化</small></div>
+                <div><b>02</b><strong>Render</strong><small>React 调用函数组件，递归计算新的 JSX 结果</small></div>
+                <div><b>03</b><strong>Reconcile</strong><small>Render 过程中根据类型、位置和 key 判断哪些节点能够复用</small></div>
+                <div><b>04</b><strong>Commit</strong><small>把必要变化写入 DOM 或 Taro 宿主环境</small></div>
+                <div><b>05</b><strong>Paint</strong><small>浏览器或小程序视图层完成布局、绘制和合成</small></div>
+              </div>
+              <p>React 的 Render 是执行组件函数并计算结果，不等于浏览器已经画出像素。组件可以重新 Render，但计算结果没有变化时，Commit 可能不修改对应 DOM。Commit 完成以后，浏览器才根据 DOM 与 CSS 做样式计算、布局和绘制。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part B · 常见性能手段的准确含义</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>手段</th><th>减少什么</th><th>什么时候有价值</th><th>常见误区</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>memo</code></td><td>父组件更新时，跳过 props 未变的子组件 Render</td><td>子组件经常收到相同 props，且自身计算明显昂贵</td><td>它不能阻止组件自己的 state 或 context 更新</td></tr>
+                    <tr><td><code>useMemo</code></td><td>复用一次计算结果</td><td>过滤、排序、分组等计算成本可测，并且依赖稳定</td><td>不能用来保证业务正确性，依赖每次变化就没有收益</td></tr>
+                    <tr><td><code>useCallback</code></td><td>复用函数引用</td><td>函数传给 memoized 子组件，或作为其他 Hook 的依赖</td><td>单独包住每个函数不会自动让页面更快</td></tr>
+                    <tr><td>稳定 key</td><td>减少错误复用、重新挂载和状态丢失</td><td>列表会插入、删除、排序或分页</td><td>数组索引和随机数会让身份不稳定</td></tr>
+                    <tr><td>状态就近放置</td><td>缩小一次更新波及的组件树</td><td>输入框、弹层、悬停等局部状态</td><td>把所有短期状态提升到页面根部会扩大 Render 范围</td></tr>
+                    <tr><td>虚拟列表</td><td>减少同时挂载的节点数量</td><td>几百或几千行的长列表</td><td>数据量很小时会增加复杂度，收益有限</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">PHASE MiniApp 的真实 React 实现</p>
+              <h3>可以讲已实现机制，也要指出一个仍待验证的热点</h3>
+              <ul class="proof-list">
+                <li><strong>外部聊天状态</strong>　<code>useChat</code> 使用 <code>useSyncExternalStore</code> 订阅组件外的聊天 store，让页面卸载再挂载以后仍能读取进行中的会话状态。</li>
+                <li><strong>稳定快照</strong>　<code>getStableSnapshot</code> 比较 messages、streamingText、turnStatus 等引用。数据没有变化时返回旧对象，避免每次读取都制造新快照。</li>
+                <li><strong>稳定操作函数</strong>　connect、sendMessage、abort 和 setEpisodeId 使用 <code>useCallback</code> 保持引用稳定，减少依赖变化和不必要的重新订阅。</li>
+                <li><strong>派生数据</strong>　首页对分数、时间顺序、可见事件和日期分组使用 <code>useMemo</code>，输入未变时复用排序与分组结果。</li>
+                <li><strong>列表身份</strong>　Journal 事件使用服务端 event id 作为 key，删除或插入消息时 React 能对应到原来的条目。</li>
+                <li><strong>加载体验</strong>　SWR 缓存、请求去重和预取减少重复网络等待。这属于数据加载性能，回答时应与 Render 性能分开。</li>
+              </ul>
+              <p class="truth-line"><strong>当前优化缺口</strong>　小程序收到每个 <code>text_delta</code> 后都会调用 <code>publishStreaming</code> 和 <code>notify</code>，快照随即变化。高频 token 可能带来密集 React 更新与 Taro <code>setData</code>。仓库还没有 Profiler 或低端机数据证明它已经形成瓶颈，因此下一步应先测量，再尝试按一帧或约 50ms 合并文本更新。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Part C · Taro 与普通 React 网页的区别</p>
+              <h3>PHASE 小程序没有直接操作浏览器真实 DOM</h3>
+              <p>PHASE MiniApp 使用 React 18.3.1 和 Taro 4.0.9。React 先更新 Taro 的虚拟 DOM。Taro 运行时把变化整理成小程序可传输的数据，通过 <code>setData</code> 从逻辑层送到视图层，再由微信小程序模板渲染。普通 React 网页的 Commit 目标是浏览器 DOM；Taro 小程序的 Commit 还要经过运行时适配和 <code>setData</code>。</p>
+              <p>因此小程序性能需要额外关注更新次数、序列化数据量、页面结构深度和逻辑层到视图层的通信。网页中的 DOM 节点数和 Layout 成本仍然重要，但不能把 Chrome DOM 更新路径原样套到微信小程序。</p>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的九十秒回答</p>
+              <blockquote>React 更新可以分成触发、Render 和 Commit。state 或外部 store 变化以后，React 会调用相关组件，计算下一份 JSX，再把必要变化提交到宿主环境。浏览器网页会修改 DOM，PHASE 小程序通过 Taro 把虚拟 DOM 变化转成 setData，再交给微信视图层。性能上我会先用 Profiler 找出更新频率高或单次耗时长的组件。PHASE 聊天使用 useSyncExternalStore，并缓存稳定快照；首页对排序和日期分组使用 useMemo，操作函数使用 useCallback，列表使用稳定 event id。数据加载还做了 SWR、请求去重和预取。当前小程序每个 SSE text_delta 都会发布状态，我会重点测量这条路径的 Render 次数和 setData 数据量。如果确认它造成卡顿，再像 iOS 端一样合并高频文本更新，并用同一段回复和同一台低端设备比较修改前后。</blockquote>
+              <footer>回答顺序 · 更新机制 → 项目实现 → 真实热点 → 测量工具 → 验证结果</footer>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>Virtual DOM 是什么</summary><div class="detail-body"><p>它是用 JavaScript 对象表达的界面结构。React 根据新的组件输出和上一次结果判断宿主环境需要哪些更新。Virtual DOM 仍然需要计算，也不能保证任何页面都快。组件树规模、更新频率和真实 DOM 或 setData 成本仍需测量。</p></div></details>
+              <details><summary>React 为什么需要 key</summary><div class="detail-body"><p>key 给同一父节点下的列表项提供稳定身份。插入、删除和排序以后，React 可以把新旧条目对应起来，保留应该保留的组件状态，并减少错误复用。PHASE 的 Journal 列表使用事件 id，适合这种会追加和删除消息的场景。</p></div></details>
+              <details><summary>useMemo 和 useCallback 有什么区别</summary><div class="detail-body"><p><code>useMemo</code> 缓存计算结果，<code>useCallback</code> 缓存函数本身的引用。两者都根据依赖是否变化决定复用。它们带有比较和维护成本，需要针对重复且昂贵的工作使用。</p></div></details>
+              <details><summary>为什么 useCallback 不一定提高性能</summary><div class="detail-body"><p>创建普通函数通常很便宜。子组件没有使用 memo，或者函数没有进入依赖比较时，稳定引用可能没有实际收益。依赖经常变化时，函数还是会重新创建。应当用 Profiler 看它是否减少了昂贵子树的 Render。</p></div></details>
+              <details><summary>怎样判断 React 页面为什么卡</summary><div class="detail-body"><p>先复现具体交互，再用 React DevTools Profiler 看哪些组件提交、每次耗时和触发原因，同时用浏览器 Performance 查看 JavaScript 长任务、Layout 与 Paint。小程序还要检查 Taro setData 次数和数据量。随后只处理成本最高的路径。</p></div></details>
+              <details><summary>为什么不能给每个组件都加 memo</summary><div class="detail-body"><p>memo 会增加 props 比较与代码复杂度。只要一个对象或函数 prop 每次都是新引用，缓存就容易失效。组件本来很轻时，比较成本也可能接近重新 Render 的成本。</p></div></details>
+              <details><summary>PHASE 的流式消息还可以怎样优化</summary><div class="detail-body"><p>先记录一次长回复产生多少 text_delta、多少 React Commit 和多少 setData。若更新过密，可以先在内存中累积文本，使用 requestAnimationFrame 或固定的短间隔统一发布；同时把流式气泡与静态历史列表拆开，避免整段历史跟随每个 token 更新。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="phase-sse" aria-labelledby="phase-sse-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">06</div>
+          <div>
+            <h2 id="phase-sse-title">PHASE 一次聊天的完整 SSE 流程</h2>
+            <p class="chapter-intro">这道题要从用户点击发送开始，一直讲到 Agent 选择工具、模型流式输出、服务端持久化和 iOS 把最终消息加入列表。核心聊天和服务端主动事件使用两条不同的 SSE 连接。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">先记住两条连接</p>
+            <ul>
+              <li><code>POST /api/chat</code> 是一次聊天请求对应的一条 SSE 响应</li>
+              <li><code>GET /api/events</code> 是服务端主动事件流</li>
+              <li>SSE 是服务端向客户端单向推送</li>
+              <li>发送消息仍然通过 HTTP POST 请求体</li>
+              <li>同一次回复可能包含多个 LLM 和工具轮次</li>
+              <li><code>turn_end</code> 表示当前回复结束</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">端到端主链路</p>
+              <h3>从点击发送到最终气泡共有十二步</h3>
+              <ol class="sequence">
+                <li><strong>客户端先做乐观更新</strong><p><code>ChatViewModel.sendMessage</code> 立即创建 user message 和 <code>clientTurnId</code>，追加到 messages，并把界面设为 submitted 与 thinking。</p></li>
+                <li><strong>构造聊天请求</strong><p><code>ChatSSEClient</code> 获取有效 access token，向 <code>/api/chat</code> 发送 JSON。请求包含 text、images、episode_id 与 client_turn_id，并声明接受 <code>text/event-stream</code>。</p></li>
+                <li><strong>服务端鉴权和校验</strong><p>认证中间件提供 userId、Supabase 客户端和 Main session。路由解析 JSON、校验 text，并在指定 episode 时查询归属，避免访问其他用户会话。</p></li>
+                <li><strong>立即打开 SSE 响应</strong><p>服务端关闭缓存与代理缓冲，先发送 <code>turn_start</code> 和 submitted 状态。主会话查询和上下文准备不会挡住用户看到已提交状态。</p></li>
+                <li><strong>确定会话并保存用户消息</strong><p>服务端得到 Main 或 episode session id，把 user message 写入 <code>journal_events</code>。这一写入异步启动，失败会记录日志并重试一次。</p></li>
+                <li><strong>取得或创建 Agent</strong><p>Agent Registry 按 session id 复用内存中的 Agent。没有实例时创建 Agent，加载该用户与该 episode 的历史消息，并注入会话上下文。空闲 Agent 会在 30 分钟后清理。</p></li>
+                <li><strong>组装上下文与能力</strong><p>Agent 配置系统提示、用户上下文、最近完整对话、模型和工具。工具包括用户资料、皮肤历史、库存、routine、watchlist、商品检索与 memory。</p></li>
+                <li><strong>进入 Agent loop</strong><p><code>agent.prompt</code> 调用模型并产生 kernel events。需要工具时，模型先输出 tool call，服务端执行工具，把 tool result 放回上下文，再开始下一轮模型调用。</p></li>
+                <li><strong>转换成 SSE 协议</strong><p>服务端把 kernel events 映射为 <code>llm_start</code>、<code>tool_start</code>、<code>tool_end</code>、<code>text_delta</code>、<code>message_end</code> 与 <code>turn_end</code>。写队列保证帧按顺序发送。</p></li>
+                <li><strong>iOS 逐帧解析</strong><p><code>URLSession.bytes</code> 逐行读取响应，<code>SSEParser</code> 按空行切出事件帧，JSONDecoder 再把 data 解析成 <code>ServerMessage</code>，交给 AsyncThrowingStream。</p></li>
+                <li><strong>更新流式界面</strong><p>ViewModel 在 MainActor 处理事件。<code>text_delta</code> 追加到 currentMsg，界面文本最多约 50ms 发布一次；工具和 LLM 事件更新步骤状态。</p></li>
+                <li><strong>完成与持久化</strong><p><code>message_end</code> 给出权威全文，<code>turn_end</code> 触发服务端保存 assistant message。iOS 把最终文本、工具信息和步骤组成 assistant message，追加到 messages，随后清理 thinking 与 streaming 状态。</p></li>
+              </ol>
+            </article>
+
+            <article class="panel">
+              <p class="label">SSE 事件速查</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>事件</th><th>服务端含义</th><th>iOS 客户端动作</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>turn_start</code></td><td>一次 Agent 回复开始</td><td>清空旧缓冲，显示思考状态</td></tr>
+                    <tr><td><code>turn_status</code></td><td>submitted、preparing、thinking、using_tool、writing、finalizing</td><td>更新用户可见的阶段文字，并关联 clientTurnId</td></tr>
+                    <tr><td><code>llm_start / llm_end</code></td><td>一次模型调用开始与结束</td><td>记录模型、耗时和 token 数等调试步骤</td></tr>
+                    <tr><td><code>tool_start / tool_end</code></td><td>工具执行开始与结果返回</td><td>显示工具状态，必要时刷新 watchlist</td></tr>
+                    <tr><td><code>text_delta</code></td><td>回答新增的一小段文本</td><td>累积到 currentMsg，并节流发布 streamingText</td></tr>
+                    <tr><td><code>message_end</code></td><td>当前 assistant message 的权威全文</td><td>补齐没有流式到达的全文并立即刷新</td></tr>
+                    <tr><td><code>turn_end</code></td><td>这次回复已经结束</td><td>生成最终 assistant message 并清理活动状态</td></tr>
+                    <tr><td><code>error</code></td><td>鉴权、模型或链路失败</td><td>展示可恢复错误并重置当前 turn</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">两条 SSE 不要混淆</p>
+              <h3>聊天回复随 POST 返回，主动事件走单独 GET</h3>
+              <ul class="proof-list">
+                <li><code>ChatSSEClient</code> 每次发送都建立 <code>POST /api/chat</code>。请求体把用户输入送到服务端，同一个 HTTP 响应持续返回该 turn 的 SSE 帧。</li>
+                <li><code>UserEventsSSEClient</code> 建立 <code>GET /api/events</code> 长连接，处理 vision result、upload complete 等服务端主动事件。它的 <code>isConnected</code> 只表示这条事件流状态。</li>
+                <li>小程序当前没有独立的共享事件流。它也为每次聊天打开一条 chunked POST，并在 <code>drainChatStream</code> 中消费事件。</li>
+                <li>用户点击停止时，客户端先取消本地流，再调用 <code>POST /api/chat/abort</code>。服务端找到对应 session 的 pending turn 和 Agent，并传播 abort。</li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <p class="label">性能与可靠性细节</p>
+              <div class="fact-list">
+                <div class="fact"><strong>帧顺序</strong><p>服务端用 Promise write queue 串行写 SSE，避免同步订阅回调让帧交错或响应提前关闭。</p></div>
+                <div class="fact"><strong>UI 节流</strong><p>iOS 累积每个 text_delta，但大约每 50ms 才更新一次 streamingText，降低 SwiftUI 高频刷新。</p></div>
+                <div class="fact"><strong>会话隔离</strong><p>clientTurnId 与 episodeId 把回复绑定到发起它的 turn 和会话，切换会话后旧流不能覆盖新状态。</p></div>
+                <div class="fact"><strong>中断处理</strong><p>AsyncThrowingStream 终止时取消 Task。网络失败会清理活动状态并给用户可操作的错误。</p></div>
+                <div class="fact"><strong>持久化</strong><p>用户与 assistant 消息写入 journal_events，Agent 首次创建时按 userId 和 episodeId 加载历史。</p></div>
+                <div class="fact"><strong>工具循环</strong><p>模型调用可以输出工具请求。工具结果加入上下文以后，Agent 再发起模型调用，直到得到最终回答。</p></div>
+              </div>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">结合项目的两分钟回答</p>
+              <blockquote>PHASE 的聊天使用一次 POST 加一条 SSE 响应。用户在 iOS 点击发送以后，ChatViewModel 先把用户消息加入本地列表，生成 clientTurnId，并显示 submitted。ChatSSEClient 带 Bearer token，把 text、可选图片、episodeId 和 clientTurnId POST 到 /api/chat。服务端校验用户和 episode 归属，马上打开 SSE，先发 turn_start 和状态事件，然后确定 session，把用户消息写入 journal_events，并按 session 取得或创建 Agent。新 Agent 会加载这个用户的历史，配置系统提示、用户上下文、模型和工具。agent.prompt 进入循环，模型可能先调用商品、皮肤历史或 routine 等工具，工具结果再回到上下文，继续下一轮模型调用。服务端把 kernel events 转成 tool_start、llm_start、text_delta、message_end 和 turn_end，并通过写队列保持顺序。iOS 用 URLSession.bytes 逐行读取，SSEParser 切帧，JSONDecoder 转成 ServerMessage。text_delta 会累积，但界面最多约 50ms 更新一次。message_end 给出完整内容，turn_end 后客户端生成最终 assistant message 并清理流式状态，服务端也把 assistant message 保存到 journal_events。另有一条 GET /api/events 负责服务端主动事件，它不承担这次聊天回复。</blockquote>
+              <footer>回答顺序 · 客户端乐观更新 → POST 与鉴权 → Agent loop → SSE 事件 → UI 更新 → 持久化与结束</footer>
+            </article>
+
+            <article class="panel">
+              <p class="label">源码证据</p>
+              <ul class="proof-list">
+                <li><a href="https://github.com/phasebook-AI/phase-ios-app/pull/1">PHASE iOS PR #1 · ChatSSEClient 与 UserEventsSSEClient</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-server/src/routes/chat.ts">PHASE backend · POST /api/chat 路由</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-server/src/agent-registry.ts">PHASE backend · Agent Registry 与历史加载</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-kernel/src/agent-loop.ts">PHASE kernel · 模型与工具循环</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase-frontend/blob/main/miniapp/src/hooks/useChat.ts">PHASE MiniApp · SSE 消费与 React 状态</a></li>
+              </ul>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>为什么 SSE 请求使用 POST</summary><div class="detail-body"><p>原生 EventSource 主要用于 GET。PHASE 需要把用户文本、图片和 episodeId 放进请求体，因此使用普通 HTTP POST，再让响应保持 <code>text/event-stream</code>。iOS 用 URLSession.bytes，小程序用 chunked Taro.request 消费响应。</p></div></details>
+              <details><summary>SSE 和 WebSocket 在这里怎样选择</summary><div class="detail-body"><p>聊天数据方向很清楚。用户输入通过一次 POST 上行，服务端回答持续下行。SSE 基于 HTTP，重连、代理和抓包相对直观。若双方都需要长期高频主动发送、实时协作或二进制交互，WebSocket 更合适。</p></div></details>
+              <details><summary>为什么 message_end 和 turn_end 都需要</summary><div class="detail-body"><p><code>message_end</code> 表示一条 assistant message 的内容已经完整，可以提供权威全文。<code>turn_end</code> 表示整个 Agent turn 完成，其中可能包含多轮模型调用和工具执行。工具调用产生的中间 assistant message 不能提前结束整个 turn。</p></div></details>
+              <details><summary>模型调用工具以后发生什么</summary><div class="detail-body"><p>Agent loop 识别 assistant message 中的 toolCall，按名字找到工具并执行。当前 kernel 的统一参数校验仍是透传，具体类型、长度和业务约束主要由各个 PhaseTool 自己检查。工具结果包装成 toolResult message，加入上下文，再调用模型。模型读取工具结果以后生成下一步调用或最终文本。</p></div></details>
+              <details><summary>为什么 text_delta 不直接每次刷新界面</summary><div class="detail-body"><p>模型可能很快地产生许多小片段。每个片段都修改可观察状态，会增加主线程状态发布、View 重新计算与布局次数。iOS 保留完整文本，但把对 UI 的发布合并到约 50ms 一次，用户仍然感到连续输出。</p></div></details>
+              <details><summary>客户端中途断网会怎样</summary><div class="detail-body"><p>URLSession 流抛出错误，AsyncThrowingStream 结束。ViewModel 清理当前 turn，并加入连接中断提示。旧版历史模式还会在成功结束后按 2、4、8 秒回查历史，避免已经持久化的 assistant reply 没有进入本地列表。</p></div></details>
+              <details><summary>服务端如何避免不同用户会话串线</summary><div class="detail-body"><p>路由从认证上下文取得 userId。指定 episode 时同时按 episode id 和 user id 查询归属。Agent Registry 也记录 userId，加载历史时按 user_id 和 episode_id 双重过滤。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="browser-rendering" aria-labelledby="browser-rendering-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">07</div>
+          <div>
+            <h2 id="browser-rendering-title">从一次网页请求到用户看到页面</h2>
+            <p class="chapter-intro">这道题需要分清首次打开页面和页面内发起 API 请求。HTML 提供结构，CSS 参与样式和布局，JavaScript 执行业务逻辑，React 负责从状态计算界面，浏览器最终生成像素。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">这一章必须会</p>
+            <ul>
+              <li>网络建立连接并取得 HTML</li>
+              <li>HTML 解析产生 DOM</li>
+              <li>CSS 解析产生 CSSOM</li>
+              <li>JavaScript 可能影响解析与 DOM</li>
+              <li>React Render 与浏览器 Paint 是不同阶段</li>
+              <li>Render tree 经过 Layout、Paint 与 Composite</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel">
+              <p class="label">场景 A · 首次打开 React 网页</p>
+              <h3>浏览器从 URL 走到第一帧像素</h3>
+              <ol class="sequence">
+                <li><strong>解析 URL 与检查缓存</strong><p>浏览器确定协议、主机、端口和路径，并检查 HTTP 缓存或 Service Worker 是否已有可用响应。</p></li>
+                <li><strong>建立网络连接</strong><p>需要联网时先解析 DNS，再建立 TCP；HTTPS 还要完成 TLS。随后发送 HTTP 请求并等待响应头和内容。</p></li>
+                <li><strong>解析 HTML</strong><p>收到字节后解码成字符和 token，逐步建立 DOM。解析器发现 link、script、img 等资源时会继续发起请求。</p></li>
+                <li><strong>构建 CSSOM</strong><p>CSS 文件与 style 内容被解析成 CSSOM。浏览器需要样式规则来确定可见节点的计算样式，CSS 通常会影响首次绘制时机。</p></li>
+                <li><strong>下载并执行 JavaScript</strong><p>普通 script 可能暂停 HTML 解析，等待脚本下载和执行。defer 会在 HTML 解析后按顺序执行，async 下载完成后尽快执行。</p></li>
+                <li><strong>React 首次 Render</strong><p>JavaScript bundle 执行 createRoot 和 render。React 调用组件，把 props 与 state 计算成 JSX 对应的元素树。</p></li>
+                <li><strong>React Commit</strong><p>React 创建或更新真实 DOM 节点，绑定必要的属性和事件，使 DOM 与组件输出一致。</p></li>
+                <li><strong>浏览器生成像素</strong><p>DOM 与 CSSOM组合成可见的 Render tree。浏览器计算 Layout，生成绘制指令并 Paint，最后把不同图层 Composite 到屏幕。</p></li>
+              </ol>
+            </article>
+
+            <article class="panel">
+              <p class="label">HTML、CSS、JavaScript、React 各自负责什么</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>部分</th><th>主要责任</th><th>对性能的典型影响</th></tr></thead>
+                  <tbody>
+                    <tr><td>HTML</td><td>文档结构、语义和初始资源引用，解析后形成 DOM</td><td>文档体积、节点数量、资源发现顺序</td></tr>
+                    <tr><td>CSS</td><td>选择器、计算样式、尺寸与布局约束，解析后形成 CSSOM</td><td>阻塞首次绘制、复杂样式计算、Layout 与 Paint</td></tr>
+                    <tr><td>JavaScript</td><td>事件、数据请求、状态变化和 DOM 或框架逻辑</td><td>下载与解析成本、主线程长任务、解析阻塞</td></tr>
+                    <tr><td>React</td><td>根据 props、state 与 context 计算组件树，并提交必要宿主更新</td><td>组件 Render 范围、重复计算、提交次数</td></tr>
+                    <tr><td>浏览器渲染引擎</td><td>样式计算、Layout、Paint 与 Composite</td><td>大范围布局、昂贵绘制、过多图层与掉帧</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">场景 B · 页面内点击后请求 API</p>
+              <h3>已有页面不会重新下载整份 HTML</h3>
+              <div class="flow">
+                <div><b>01</b><strong>事件回调</strong><small>浏览器事件循环执行点击处理函数</small></div>
+                <div><b>02</b><strong>Loading 状态</strong><small>setState 触发 React Render 与 Commit</small></div>
+                <div><b>03</b><strong>Fetch</strong><small>网络层发送 API 请求，主线程可以继续处理其他任务</small></div>
+                <div><b>04</b><strong>响应处理</strong><small>Promise 回调解析 JSON 并更新 state</small></div>
+                <div><b>05</b><strong>显示结果</strong><small>React 再次 Render 与 Commit，浏览器重新绘制变化区域</small></div>
+              </div>
+              <p>API 请求返回以后，JavaScript 通常只更新一部分 state。React 重新计算受影响组件，Commit 必要 DOM 变化，浏览器再对相关区域做样式、布局或绘制。是否触发 Layout 取决于改动的属性；只改变 transform 或 opacity 时更容易交给合成阶段处理。</p>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">容易混淆的三个 Render</p>
+              <ul class="proof-list">
+                <li><strong>React Render</strong>　调用组件并计算下一份界面描述。它是 JavaScript 计算。</li>
+                <li><strong>React Commit</strong>　把差异写到真实 DOM 或 Taro 宿主。它可能产生 DOM mutation 或 setData。</li>
+                <li><strong>Browser Rendering</strong>　浏览器根据 DOM 与 CSS 做 Style、Layout、Paint 和 Composite，最终形成屏幕像素。</li>
+              </ul>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">面试可直接复述的两分钟回答</p>
+              <blockquote>用户首次打开 React 网页时，浏览器先解析 URL，检查缓存，然后经过 DNS、TCP 和 HTTPS 的 TLS 建立连接，发送 HTTP 请求。收到 HTML 后，解析器逐步构建 DOM，并发现 CSS、JavaScript 和图片等资源。CSS 被解析为 CSSOM；普通同步脚本可能暂停 HTML 解析，defer 脚本会等 HTML 解析完成。React bundle 执行后，createRoot 触发首次 Render，React 调用组件计算 JSX，再在 Commit 阶段创建或更新真实 DOM。浏览器把 DOM 和 CSSOM组合成 Render tree，完成样式计算、Layout、Paint 和 Composite，用户才看到像素。页面已经打开以后，用户点击按钮发起 API 请求时，事件处理函数可以先 setState 显示 loading，再用 fetch 请求数据。响应回来后 Promise 回调解析数据并再次 setState，React 重新 Render 和 Commit变化部分，浏览器再绘制受影响区域。React Render、React Commit 和浏览器 Paint 是三个不同阶段。</blockquote>
+              <footer>回答顺序 · 网络 → DOM 与 CSSOM → JavaScript → React → Layout、Paint、Composite</footer>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>CSS 为什么会影响首次渲染</summary><div class="detail-body"><p>浏览器需要 CSSOM 才能确定节点的计算样式并构建 Render tree。缺少关键样式时直接绘制容易产生无样式内容和大幅跳动，因此外部 CSS 通常会阻塞首次绘制。</p></div></details>
+              <details><summary>JavaScript 为什么可能阻塞 HTML 解析</summary><div class="detail-body"><p>同步脚本可能读取或修改当前 DOM，浏览器需要保证执行顺序，所以解析器遇到普通 script 时可能暂停，等待脚本下载和执行。defer 与 async 改变下载和执行时机，但两者的顺序保证不同。</p></div></details>
+              <details><summary>DOM 和 Render tree 有什么区别</summary><div class="detail-body"><p>DOM 表示文档节点和语义，包含 head 等不直接显示的内容。Render tree 只保留参与视觉呈现的节点，并带有计算后的样式。<code>display: none</code> 的节点通常不会进入 Render tree。</p></div></details>
+              <details><summary>Layout、Paint、Composite 分别做什么</summary><div class="detail-body"><p>Layout 计算元素尺寸与位置。Paint 生成文字、颜色、边框和阴影等绘制指令。Composite 把已经绘制的图层按顺序组合到屏幕。改变宽高常会触发 Layout，改变颜色会触发 Paint，transform 与 opacity 常可只影响 Composite。</p></div></details>
+              <details><summary>React 重新 Render 会重建整个 DOM 吗</summary><div class="detail-body"><p>通常不会。React 可以调用一段组件树重新计算，但 Commit 只应用与上一次结果不同的必要宿主变化。组件类型、位置和稳定 key 帮助它复用已有节点与状态。</p></div></details>
+              <details><summary>JSX 是 HTML 吗</summary><div class="detail-body"><p>JSX 是 JavaScript 的语法扩展，用来描述元素结构。构建工具会把 JSX 转换成 JavaScript 调用或编译结果。React 根据这些元素描述进行 Render，最终才在网页端创建 DOM。</p></div></details>
+              <details><summary>怎样分析首屏慢</summary><div class="detail-body"><p>先用 Network 看 DNS、连接、TTFB、资源体积和请求瀑布，再用 Performance 看脚本长任务、样式计算、Layout 与 Paint。React Profiler用于确认组件 Render 与 Commit 成本。指标要分开记录服务器等待、资源加载和主线程渲染。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="agent-harness" aria-labelledby="agent-harness-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">08</div>
+          <div>
+            <h2 id="agent-harness-title">PHASE Agent Harness、准确率与工具可靠性</h2>
+            <p class="chapter-intro">这里的 Harness 是围绕模型的一整套运行环境。它负责提示词、上下文、工具注册、循环执行、错误边界、事件流、持久化和评测。iOS 与小程序共享同一套后端 Harness，客户端负责发请求、消费 SSE 和呈现结果。</p>
+          </div>
+        </header>
+
+        <div class="chapter-grid">
+          <aside class="side-note">
+            <p class="label">先记住六句话</p>
+            <ul>
+              <li>模型本身不会直接访问数据库</li>
+              <li>服务端把工具名称、说明和参数 Schema 发给模型</li>
+              <li>模型只生成 tool call，kernel 才执行真实函数</li>
+              <li>工具结果进入上下文，模型再决定下一步</li>
+              <li>准确率要按意图、工具、参数、grounding 和任务结果拆开</li>
+              <li>当前代码有真实防线，也有统一参数校验和错误语义的缺口</li>
+            </ul>
+          </aside>
+
+          <div class="content-stack">
+            <article class="panel accent-panel">
+              <p class="label">先把边界讲清楚</p>
+              <h3>客户端没有各自运行一套 Agent</h3>
+              <p>iOS 的 <code>ChatSSEClient</code> 与小程序的 <code>openChatStream</code> 都向后端 <code>POST /api/chat</code>。Agent factory、kernel loop 和 11 个 PhaseTool 都在 PHASE backend。两个客户端共享推理、工具和持久化逻辑，只在网络适配和界面状态更新上不同。</p>
+              <p>因此“iOS Agent Harness”和“小程序 Agent Harness”更准确的说法是同一个服务端 Harness，外接两个客户端适配层。这样能避免重复实现工具权限、上下文和错误恢复。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">Harness 架构</p>
+              <h3>一次回答经过五个责任层</h3>
+              <div class="flow">
+                <div><b>01</b><strong>Client</strong><small>iOS URLSession.bytes 或小程序 chunked request 发送消息并消费 SSE</small></div>
+                <div><b>02</b><strong>Chat Route</strong><small>鉴权、episode 归属、Agent Registry、持久化和 SSE 编码</small></div>
+                <div><b>03</b><strong>Agent Factory</strong><small>模型、system prompt、用户上下文、最近消息和 11 个工具</small></div>
+                <div><b>04</b><strong>Kernel Loop</strong><small>调用模型、识别 tool call、执行工具、回填结果并继续循环</small></div>
+                <div><b>05</b><strong>Tools &amp; Data</strong><small>Supabase、商品目录、memory、库存、routine 与 watchlist</small></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">模型怎样使用工具</p>
+              <h3>模型负责选择，代码负责执行</h3>
+              <ol class="sequence">
+                <li><strong>注册能力</strong><p><code>agent-factory.ts</code> 汇总 11 个工具，每个工具包含 name、description、parameters 和 execute。</p></li>
+                <li><strong>绑定身份与数据源</strong><p>factory 把认证后的 <code>userId</code>、Supabase client 和语言市场信息绑定进 ToolContext。模型不能自行指定另一个 userId。</p></li>
+                <li><strong>发送工具定义</strong><p>kernel 构造模型请求时，把 system prompt、消息和工具 Schema 一起交给 provider。模型只看到能力描述，并没有数据库连接。</p></li>
+                <li><strong>决定首轮策略</strong><p>通常由模型自动选择。推荐和皮肤分析等高风险 grounding 场景会经过 intent gate，必要时把首轮 tool choice 固定为指定函数。</p></li>
+                <li><strong>生成 tool call</strong><p>模型返回工具名、toolCallId 和 JSON arguments。OpenAI 兼容 provider 即使把 finish reason 写成 stop，只要带 tool calls，适配层也会规范化为 <code>toolUse</code>。</p></li>
+                <li><strong>执行真实函数</strong><p>kernel 按名字查找 AgentTool，调用 execute。PhaseTool 再查询 Supabase、商品目录或写入用户状态。</p></li>
+                <li><strong>回填结果</strong><p>结果被包装成 <code>toolResult</code> message，和原 toolCallId 配对，加入同一个上下文。</p></li>
+                <li><strong>继续推理</strong><p>模型读取真实结果后，可以调用下一个工具，也可以生成最终文本和结构化卡片。没有更多 tool call 时 turn 才结束。</p></li>
+              </ol>
+            </article>
+
+            <article class="panel">
+              <p class="label">准确率该怎样回答</p>
+              <h3>仓库没有一个可代表所有回答的总准确率</h3>
+              <p>“Agent 准确率”至少包含五件不同的事。一个百分比无法同时说明意图判断、工具选择、参数正确、数据 grounding 和最终建议是否有用。当前仓库能给出部分真实指标，但不能把它们包装成整体回答准确率。</p>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>维度</th><th>怎样判断</th><th>PHASE 当前证据</th></tr></thead>
+                  <tbody>
+                    <tr><td>意图分类</td><td>预测 intent 是否等于人工 gold label</td><td>CN gate 使用 11 类、每类 4 条，共 44 条平衡样本。合并前实测 macro recall 0.932。</td></tr>
+                    <tr><td>强制工具决策</td><td>该强制时是否强制，不能误触发</td><td>同一 gate 中 RECOMMEND 与 SKIN_ANALYSIS recall 都是 1.00，forced precision 是 1.00，provider error 为 0。</td></tr>
+                    <tr><td>本轮 grounding</td><td>推荐前是否调用目录工具，输出是否只含当前目录商品</td><td>模型对比 Harness 记录了真实历史回放、工具轨迹、卡片解析和目录外品牌。PR #94 的 production-model runs 为 18/18，未出现非纠正语境的目录外品牌。</td></tr>
+                    <tr><td>结构化输出</td><td>JSON 是否能解析，商品是否能解析到权威目录</td><td>StreamingFenceScanner 与 recommendation finalizer 会丢弃无法解析或无法 grounding 的卡片，最多输出 3 个权威商品。</td></tr>
+                    <tr><td>最终任务成功</td><td>用户是否得到正确且有用的建议，写操作是否真的完成</td><td>当前没有一份覆盖生产用户、医疗正确性和长期满意度的统一统计，因此不能声称整体准确率为 93.2%。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="truth-line"><strong>面试用法</strong>　可以说意图 gate 在 44 条 CN gold set 上达到 0.932 macro recall。紧接着补充这只是意图分类指标，不能当成 Agent 最终回答准确率。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">一个真实失败怎样推动防线升级</p>
+              <h3>历史回答诱发了零工具调用的自我复制</h3>
+              <p>团队在真机和本地 sandbox 复现过一个具体问题。历史里已有完整商品推荐时，用户再次询问推荐，模型会直接复用旧名单，甚至声称已经重新查过目录，但本轮实际没有任何工具调用。目录可能已经变化，这会产生过期或不存在的商品。</p>
+              <div class="fact-list">
+                <div class="fact"><strong>第一层</strong><p>system prompt 明确规定历史商品不能作为本轮 grounding。单靠静态规则时，记录历史上的目录调用率只有 2/5。</p></div>
+                <div class="fact"><strong>第二层</strong><p>在当前用户消息前插入短的 REGROUND_REMINDER。Harness 中目录调用率恢复到 5/5，但一条已经被旧回答污染的 live history 仍能突破提醒。</p></div>
+                <div class="fact"><strong>第三层</strong><p>增加 intent gate。推荐意图首轮强制 <code>search_product_catalog</code>，皮肤分析首轮强制 <code>get_skin_history</code>，后续轮次恢复 auto。</p></div>
+                <div class="fact"><strong>验证层</strong><p>44 条分类 gold set 加真实历史回放的 model compare 同时检查分类、工具轨迹、卡片解析和目录外品牌。</p></div>
+              </div>
+              <p>这个案例能说明 Prompt 约束、位置更近的提醒、确定性 gate 和 eval 各自解决不同问题。只靠一句“提示词写得更严格”无法保证工具真的发生。</p>
+            </article>
+
+            <article class="panel">
+              <p class="label">工具调用失败以后</p>
+              <h3>失败类型决定恢复路径</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>失败位置</th><th>当前实际处理</th><th>结果与限制</th></tr></thead>
+                  <tbody>
+                    <tr><td>intent classifier 超时、取消、输出无效或 provider error</td><td>2 秒 deadline 内失败会返回失败原因，gate 采用 fail-open，不强制工具</td><td>聊天不会因分类器挂掉而被阻塞，grounding 保障会下降到 prompt 与后续 finalizer</td></tr>
+                    <tr><td>找不到工具或 execute 抛异常</td><td>kernel catch 后生成文本 ToolResult，标记 <code>isError: true</code>，再放回上下文</td><td>模型下一轮能解释失败或换方案，单个工具异常通常不会直接终止整个 turn</td></tr>
+                    <tr><td>PhaseTool 自己捕获错误</td><td>很多工具返回 JSON 字符串 <code>{"error":"..."}</code></td><td>模型能看到 error，但 kernel 可能仍记作 <code>isError: false</code>。这是当前错误语义不统一的地方</td></tr>
+                    <tr><td>模型或 provider 在输出前失败</td><td>仅对可重试 provider failure 做一次 fallback。成功切换后，本次 run 的后续工具轮继续使用 fallback model</td><td>已经开始输出文本或 tool call 后不会再重试，避免重复内容或重复副作用</td></tr>
+                    <tr><td>结构化卡片 JSON 错误或商品无法匹配</td><td>scanner 与 finalizer fail closed，丢弃该 block</td><td>客户端不会收到模型伪造的商品字段，代价是可能只有文字而没有卡片</td></tr>
+                    <tr><td>用户中断</td><td>AbortSignal 传播到分类器、模型和工具。多工具调用按顺序执行，每个工具后检查 steering，剩余调用会标记 skipped</td><td>可以尽早响应新输入，也减少旧 turn 继续做无用工作</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel accent-panel">
+              <p class="label">当前代码缺口</p>
+              <h3>这部分适合在追问中主动承认</h3>
+              <ul class="proof-list">
+                <li><strong>统一 Schema 校验尚未落地</strong>　<code>phase-ai</code> 的 <code>validateToolArguments</code> 当前直接返回原 arguments。部分 PhaseTool 使用 <code>validateArgs</code> 检查类型和长度，覆盖并不完全一致。</li>
+                <li><strong>业务错误和执行异常的状态不统一</strong>　工具内部返回 <code>{error}</code> 时，kernel 未必把它标记成 <code>isError</code>。前端收到的 <code>tool_end</code> 也没有传出 isError 字段，通常只把步骤标为 done。</li>
+                <li><strong>工具调用默认串行</strong>　这样容易保证顺序、处理写操作和用户中断，但多个互不依赖的只读查询会叠加延迟。</li>
+                <li><strong>整体任务成功率缺少生产验证反馈</strong>　现有 eval 对 intent 与商品 grounding 很具体，但还缺工具参数成功率、真实写入成功率、p95 首 token 时间和用户确认结果等统一看板。</li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <p class="label">降低工具错误率的现有机制</p>
+              <div class="fact-list">
+                <div class="fact"><strong>最小权限上下文</strong><p>ToolContext 由服务端绑定认证 userId 和 Supabase client。<code>update_state</code> 会忽略模型传来的 user_id，并重新写入上下文 userId。</p></div>
+                <div class="fact"><strong>明确工具 Schema</strong><p>名称、说明、required 字段和 enum 给模型提供调用约束。具体工具继续检查字符串长度、数组数量、目标类型和商品身份。</p></div>
+                <div class="fact"><strong>确定性首轮 gate</strong><p>高风险 intent 不完全依赖模型自由选择。常见推荐语句走 regex 快路，其他表达走温度为 0 的分类器。</p></div>
+                <div class="fact"><strong>权威数据优先</strong><p>system prompt 要求 tool data 优先。商品名称、图片、价格和链接最终从 active catalog 生成，无法解析就丢弃。</p></div>
+                <div class="fact"><strong>上下文与重新 grounding</strong><p>每轮并行查询当前 profile、皮肤、routine 和 inventory。已有 assistant history 时，在当前问题前增加短提醒。</p></div>
+                <div class="fact"><strong>测试与 eval</strong><p>工具各自有 unit tests；chat route 测失败工具不生成商品卡；intent gate 与 model compare 覆盖分类、工具轨迹和 hallucinated brand。</p></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">性能与效率</p>
+              <h3>优化分为模型成本、服务端等待和客户端刷新</h3>
+              <div class="table-wrap">
+                <table class="compare">
+                  <thead><tr><th>位置</th><th>现有实现</th><th>作用与取舍</th></tr></thead>
+                  <tbody>
+                    <tr><td>意图判断</td><td>推荐关键词走 regex 快路。分类器只读最近 6 条 user/assistant 消息，单条截断 200 字，digest 最多 2400 字，整个 prompt 最多 4800 字，输出最多 64 tokens，deadline 2 秒</td><td>控制延迟和 token，分类器失败时不阻塞主聊天</td></tr>
+                    <tr><td>聊天上下文</td><td>默认保留最近约 40 条消息，并向前扩到完整 user turn 边界</td><td>降低 token 与长历史延迟，同时避免从 toolResult 或半个 turn 中间截断</td></tr>
+                    <tr><td>用户上下文</td><td>profile、最新皮肤、routine 数量和 inventory 数量通过 <code>Promise.all</code> 并行查询</td><td>四次独立数据库读取不串行等待</td></tr>
+                    <tr><td>Agent 生命周期</td><td>Registry 按 session 复用 Agent，30 分钟空闲回收，每 5 分钟检查一次</td><td>减少重复构造和历史加载，同时限制长期内存占用</td></tr>
+                    <tr><td>模型 fallback</td><td>只在首次内容 commit 前对可重试 provider failure 进行一次 fallback，本 run 内 sticky</td><td>提高可用性，避免每个工具轮反复撞击异常 primary，也避免输出后重试导致重复</td></tr>
+                    <tr><td>首个可见反馈</td><td>SSE 打开后立即发送 turn_start 和 submitted，Main session 与 Agent 准备随后完成</td><td>用户先看到请求已接收，数据库和模型准备不再造成静默等待</td></tr>
+                    <tr><td>流式结构化输出</td><td>scanner 增量放行普通文本，只缓存可能成为 fenced block 的短尾部。结构化 block 闭合后立即转成 SSE event</td><td>文字保持流式，卡片无需等待整条 message 完成</td></tr>
+                    <tr><td>后处理</td><td>建议词在可见 turn_end 之后生成，最多晚约 5 秒到达</td><td>附加能力不计入用户看到主回答的等待时间</td></tr>
+                    <tr><td>客户端 UI</td><td>iOS 收齐每个 delta，但约 50ms 才发布一次 SwiftUI 状态。小程序当前每次 delta 都调用外部 store update</td><td>iOS 已减少高频刷新。小程序仍可按帧或时间批量发布，属于可继续优化点</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">如果让我继续改</p>
+              <h3>优先修复四个可测量的问题</h3>
+              <ol class="sequence">
+                <li><strong>统一运行时参数校验</strong><p>在 kernel 层用真实 JSON Schema validator 拦截缺失字段、错误类型、enum 和 additional properties，再执行工具。</p></li>
+                <li><strong>统一 ToolResult 契约</strong><p>工具返回明确的 <code>ok</code>、error code、retryable 和 safeMessage。业务错误不能再伪装成成功 tool_end。</p></li>
+                <li><strong>声明工具副作用</strong><p>给工具增加 readOnly、idempotent 和 dependency metadata。只并行互不依赖的只读工具，写工具继续串行并带幂等键。</p></li>
+                <li><strong>补生产指标</strong><p>记录 p50 与 p95 首 token 时间、每 turn 的 LLM 轮数、工具失败率、参数拒绝率、fallback 率、grounded card 成功率和用户重试率。</p></li>
+              </ol>
+            </article>
+
+            <article class="answer-box">
+              <p class="label">面试可直接复述的两分钟回答</p>
+              <blockquote>PHASE 的 iOS App 和小程序共享一套服务端 Agent Harness。客户端只负责把消息 POST 到 /api/chat，再消费 SSE。服务端按 session 取得 Agent，factory 组装 system prompt、当前用户上下文、最近完整对话、区域模型和 11 个工具。每个工具把 name、description 和 JSON Schema 暴露给模型，并由服务端绑定认证 userId 和 Supabase。模型返回的只是 tool call。kernel 按名称找到函数并执行，把 tool result 加回上下文，再调用模型，直到得到最终回答。准确率方面我们没有把所有回答压成一个百分比。现有最具体的指标是 CN intent gate 的 44 条平衡 gold set，macro recall 为 0.932，推荐和皮肤分析 recall 都是 1.0，forced precision 也是 1.0。商品推荐还有 active catalog grounding。模型写出的商品字段不会直接交给客户端，finalizer 会用工具结果和当前目录重新解析，无法解析就丢弃。工具抛异常时 kernel 会生成 isError tool result，让模型下一轮恢复；provider 在输出开始前发生可重试错误时会做一次 fallback。当前也有缺口。kernel 的统一参数 validator 仍是透传，很多业务错误由工具返回 JSON error，isError 语义并不完全统一。若继续优化，我会先统一运行时 Schema 校验和 ToolResult 契约，再根据只读和幂等属性安全并行工具，并用首 token、工具失败、grounding 成功和任务完成等指标验证效果。</blockquote>
+              <footer>回答顺序 · 共享边界 → Harness 组成 → 工具循环 → 分层准确率 → 失败恢复 → 当前缺口与优化</footer>
+            </article>
+
+            <article class="panel evidence-ledger">
+              <p class="label">你的可主张范围</p>
+              <h3>把个人贡献与团队后续机制分开</h3>
+              <div class="fact-list">
+                <div class="fact"><strong>你本人可以详细讲</strong><p>PR #50 把 Agent 商品检索、价格、状态写入和结构化输出收口到 active catalog，并采用 fail-closed。PR #43 增加 chat turn status 和 clientTurnId。PR #35 增加脱敏的后端 PostHog 事件。</p></div>
+                <div class="fact"><strong>你本人还做过</strong><p><code>113a670</code> 把上下文限制在最近消息，并向前保留完整 user turn。<code>5fc6e62</code> 让 SSE 先发 turn_start，再异步准备 Main session 与 Agent，减少静默等待。</p></div>
+                <div class="fact"><strong>团队后续实现</strong><p>PR #90 的重新 grounding 与 PR #94 的 LLM intent gate 主要由同事提交。你可以讲现在怎样工作、怎样接入和怎样评测，不能说成自己独立设计并实现。</p></div>
+                <div class="fact"><strong>合适的面试措辞</strong><p>“我负责过客户端接入、SSE 启动体验、上下文截断和商品 grounding。团队后来补了 intent gate 与 fallback。我为了这次复盘沿当前代码把整条 Harness 重新读了一遍。”</p></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <p class="label">源码与 PR 证据</p>
+              <ul class="proof-list">
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-agent/src/agent-factory.ts">Agent factory · 模型、上下文、11 个工具与 intent gate</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-kernel/src/agent-loop.ts">Agent loop · tool call、tool result、错误与 fallback sticky</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-agent/src/intent-classifier.ts">Intent classifier · 输入预算、2 秒 deadline 与 fail-open</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/eval/intent-gate/gold-set.ts">Intent eval · 11 类 44 条平衡 gold set</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/pull/94">PR #94 · 0.932 macro recall 与端到端 gate 结果</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/pull/90">PR #90 · 2/5、5/5 与真实 self-copy failure</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/pull/50">你的 PR #50 · active catalog grounding</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/pull/43">你的 PR #43 · chat turn status 与 clientTurnId</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/pull/35">你的 PR #35 · 后端 PostHog 事件和隐私过滤</a></li>
+                <li><a href="https://github.com/phasebook-AI/phase/blob/main/packages/phase-server/src/services/recommendation-card-finalizer.ts">Recommendation finalizer · 目录权威字段与 fail-closed</a></li>
+              </ul>
+            </article>
+
+            <div>
+              <p class="label">继续追问</p>
+              <details><summary>你们 Agent 的准确率是多少</summary><div class="detail-body"><p>先说明没有一个覆盖最终回答的总准确率。随后给可核验的子指标。CN intent classifier 在 44 条平衡 gold set 上 macro recall 0.932，两个强制工具类的 recall 都是 1.0，forced precision 是 1.0。商品 grounding 另用工具调用率、目录解析率和目录外品牌检查。最后补充仍缺生产任务成功率和医疗建议正确性的统一评估。</p></div></details>
+              <details><summary>为什么不能直接回答 93.2%</summary><div class="detail-body"><p>0.932 测的是 11 类意图的 macro recall。它不验证工具参数、数据库写入、商品建议理由和用户最终是否解决问题。把分类指标当成整体准确率会混淆分母，也会夸大系统能力。</p></div></details>
+              <details><summary>模型怎样知道有哪些工具</summary><div class="detail-body"><p>服务端在模型请求的 tools 字段里提供每个工具的 name、description 和 parameters Schema。system prompt 说明什么场景使用什么工具。模型输出结构化 tool call，kernel 才执行对应函数。模型不会获得 Supabase client 或直接运行 TypeScript。</p></div></details>
+              <details><summary>是谁决定调用哪个工具</summary><div class="detail-body"><p>大多数轮次由模型按 prompt 和工具描述自动选择。推荐与皮肤分析的首轮增加确定性 intent gate。常见推荐表达走 regex 快路，其他表达走分类器。gate 只固定首轮，工具结果回来后的轮次恢复 auto。</p></div></details>
+              <details><summary>工具调用失败会不会让整个回答失败</summary><div class="detail-body"><p>如果 execute 抛异常，kernel 会转成 isError toolResult，再进行下一轮模型调用，所以单个工具异常通常不会直接结束 turn。若模型 provider 本身最终失败，服务端会发送 error 与 turn_end。还要说明不少 PhaseTool 自己返回 JSON error，这类错误目前不会统一变成 isError。</p></div></details>
+              <details><summary>工具参数是怎样校验的</summary><div class="detail-body"><p>模型侧有 JSON Schema。部分 PhaseTool 在 execute 内调用 validateArgs，检查 required、类型、长度和数组数量，写操作还有 enum、用户归属和 active catalog 约束。当前 kernel 的 validateToolArguments 仍是透传，所以不能声称已经有完整统一的 runtime Schema validation。</p></div></details>
+              <details><summary>怎样防止 Agent 修改别人的数据</summary><div class="detail-body"><p>userId 来自认证上下文并绑定进 ToolContext。工具查询按用户过滤。update_state 会删除模型参数里的 user_id，再写入上下文 userId。episode 查询也同时按 episode id 与 user id 校验。安全边界放在代码与数据库查询上，不能只依赖 prompt。</p></div></details>
+              <details><summary>为什么工具不全部并行执行</summary><div class="detail-body"><p>当前 kernel 顺序执行多个 tool call。写工具可能依赖前一步结果，重复或乱序会带来副作用。顺序执行也便于每一步后检查用户 steering 并跳过剩余调用。以后可以只并行互不依赖、只读且幂等的工具，前提是先给工具补 effect metadata。</p></div></details>
+              <details><summary>怎样降低幻觉和商品错误</summary><div class="detail-body"><p>本轮必须调用目录工具，历史推荐不能直接复用。intent gate 强制高风险首轮工具。最终商品卡使用工具结果与 active catalog 重新生成品牌、图片、价格和链接。无法解析的商品和整个空卡都会被丢弃。</p></div></details>
+              <details><summary>怎样处理模型供应商失败</summary><div class="detail-body"><p>stream wrapper 在文本、thinking 或 tool call 开始前保留重试安全边界。只有 rate limit、server、timeout 和 connection 等可重试 provider failure 才尝试一次 fallback。开始输出后不重试，避免重复文本或工具副作用。切到 fallback 后，本次 run 的后续轮次继续使用它。</p></div></details>
+              <details><summary>你做了哪些性能优化</summary><div class="detail-body"><p>优先讲本人提交。你把上下文限制到最近消息，并从完整 user turn 开始，降低 token 又不破坏 toolCall 与 toolResult 配对。你还把 SSE 的 turn_start 提前到 Main session 和 Agent 准备之前，减少静默等待。iOS 客户端把流式状态发布限制到约 50ms 一次。团队当前还用了 Agent 复用、并行上下文查询、intent regex 快路和 post-turn suggestions。</p></div></details>
+              <details><summary>如果工具已经成功，最终卡片为什么还会消失</summary><div class="detail-body"><p>成功调用只证明拿到结果。模型输出的 recommendation_card 还必须是可解析 JSON，引用也必须能映射到 active catalog。任一步失败都会 fail closed。这样宁可少一张卡，也不把未验证商品展示给用户。</p></div></details>
+              <details><summary>Harness 和 Agent framework 有什么区别</summary><div class="detail-body"><p>framework 通常指可复用的 Agent 类、loop 和 tool interface。Harness 范围更大，还包含特定产品的 prompt、上下文注入、会话、工具集合、provider fallback、SSE、持久化、grounding、观测和 eval。PHASE kernel 更接近 framework，phase-agent、phase-tools 与 phase-server 合起来形成产品 Harness。</p></div></details>
+              <details><summary>这些机制都是你做的吗</summary><div class="detail-body"><p>不能全部认领。你本人有提交依据的部分包括 active catalog grounding、chat turn status、后端 analytics、上下文截断与 SSE 启动稳定。intent gate、重新 grounding 和近期 fallback 主要是团队后续实现。可以说明你已经阅读当前代码并能解释接口与取舍，但不能把团队提交改成个人经历。</p></div></details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="related" aria-labelledby="related-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">+</div>
+          <div>
+            <h2 id="related-title">这份简历还可能引出的追问</h2>
+            <p class="chapter-intro">两次面试已经从语言类型追到运行资源、框架更新、网络协议和浏览器渲染。按照 PHASE iOS App、小程序和全栈经历，下面这些内容仍然容易被继续追问。</p>
+          </div>
+        </header>
+
+        <div class="related-grid">
+          <article><span>STATE</span><h3>SwiftUI 状态管理</h3><p>State、Binding、Observation、数据所有权、单一事实来源，以及状态变化怎样更新视图。</p></article>
+          <article><span>CONCURRENCY</span><h3>任务与取消</h3><p>Task 生命周期、MainActor、actor 隔离、取消传播、数据竞争和 async 不等于后台线程。</p></article>
+          <article><span>NETWORK</span><h3>HTTP、SSE 与 WebSocket</h3><p>连接方向、重连、心跳、错误处理、幂等、取消和弱网下的状态恢复。</p></article>
+          <article><span>FULL STACK</span><h3>接口与数据库</h3><p>HTTP 状态码、认证、分页、事务、索引、并发更新和客户端服务端契约。</p></article>
+          <article><span>RELIABILITY</span><h3>失败路径</h3><p>超时、重试、重复请求、离线状态、部分结果、用户提示和操作回滚。</p></article>
+          <article><span>OWNERSHIP</span><h3>Agent 辅助开发</h3><p>自己提出了什么判断，审查了哪些代码，亲自验证了什么，以及哪些机制仍需补课。</p></article>
+          <article><span>REACT</span><h3>状态与 Effect</h3><p>状态所有权、闭包快照、依赖数组、清理函数、受控输入和避免 Effect 更新循环。</p></article>
+          <article><span>BROWSER</span><h3>事件循环与任务</h3><p>Task、microtask、Promise、requestAnimationFrame，以及长任务怎样影响输入和绘制。</p></article>
+          <article><span>WEB PERFORMANCE</span><h3>Core Web Vitals</h3><p>LCP、INP、CLS 各自衡量什么，怎样区分网络、脚本、布局和绘制问题。</p></article>
+        </div>
+      </section>
+
+      <section class="chapter" id="technique" aria-labelledby="technique-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">A</div>
+          <div>
+            <h2 id="technique-title">回答性能题的固定结构</h2>
+            <p class="chapter-intro">内存、CPU、React 和网页性能都可以沿同一条结构回答。即使没有做过完全相同的优化，也能用现象、测量和验证继续分析。</p>
+          </div>
+        </header>
+
+        <div class="technique">
+          <article><b>01</b><h3>定义现象</h3><p>先确认是泄漏、峰值、卡顿、加载慢、发热还是耗电。</p></article>
+          <article><b>02</b><h3>建立机制</h3><p>解释 ARC、主线程、网页渲染或 Bridge 怎样产生这个现象。</p></article>
+          <article><b>03</b><h3>选择工具</h3><p>说明会使用 Memory Graph、Time Profiler、Hangs 或 Web Inspector。</p></article>
+          <article><b>04</b><h3>处理热点</h3><p>只修改工具证明的高成本位置，并说明取舍和副作用。</p></article>
+          <article><b>05</b><h3>重复验证</h3><p>使用同一设备、数据和操作路径比较修改前后。</p></article>
+        </div>
+
+        <article class="panel evidence-ledger">
+          <p class="label">面试官追问代码是否由你独立完成</p>
+          <h3>把 Agent 的参与说清楚，也把自己的责任说具体</h3>
+          <p>“PHASE 的实现过程中，我大量使用了 Codex 和其他 Agent。我负责拆解需求、给出产品与技术约束、检查改动范围、阅读关键代码路径，并通过测试和实际流程验收。以资源管理为例，我能指出 SSE 任务在哪里取消、图片请求怎样合并、实时检测怎样限频，以及页面退出时清理哪些监听。面试当天我对 ARC、CPU 调度和 profiling 的系统理解还不够，这部分我不会说成自己当时已经熟练掌握。”</p>
+          <p class="truth-line"><strong>可以主张</strong>　问题定义、约束选择、代码审查、测试验收、发现问题后的迭代，以及现在能够解释的具体机制。</p>
+          <p class="truth-line"><strong>需要限定</strong>　Agent 生成过多少实现、哪些方案来自现有代码、当时有没有使用 Instruments，以及是否存在可复现的性能数据。</p>
+          <details><summary>面试官追问那你的技术贡献到底是什么</summary><div class="detail-body"><p>先选一个有提交和测试依据的例子。比如图片加载优化中，你可以讲清重复 URL 请求合并、预取并发限制、缓存容量与清理机制，再说明自己如何验证相同请求只发一次、清理后旧请求不会重新写回缓存。贡献要落到决策、审查与验证，不要只说自己会使用 AI。</p></div></details>
+          <details><summary>面试官追问离开 Agent 你还能完成吗</summary><div class="detail-body"><p>可以回答自己完成需求的速度会下降，也需要查文档，但现在能够独立读懂这些代码、解释关键生命周期并设计验证。随后现场推导一个小问题，让面试官看到你的理解。不要承诺可以不查资料复写整个项目。</p></div></details>
+        </article>
+
+        <article class="panel">
+          <p class="label">完全不知道时的回答模板</p>
+          <p>“这个机制我没有系统掌握，所以准确实现我不想猜。我目前知道它与某个运行过程有关。我会先区分用户看到的现象，再用对应工具确认热点。如果在我做过的项目里，我会先从这些位置检查。完成测量以后再决定是否修改。”</p>
+          <p>这段回答不能代替知识。它的作用是保留诚实边界，同时让面试官看到你仍能继续分析。</p>
+        </article>
+      </section>
+
+      <section class="chapter" id="sources" aria-labelledby="sources-title">
+        <header class="chapter-head">
+          <div class="chapter-no" aria-hidden="true">S</div>
+          <div>
+            <h2 id="sources-title">官方资料入口</h2>
+            <p class="chapter-intro">技术内容依据 Swift、Apple Developer 和 WebKit 官方文档核对。继续学习时优先从这些页面进入。</p>
+          </div>
+        </header>
+
+        <ul class="source-list">
+          <li><a href="https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html">Swift 官方文档 · Structures and Classes</a></li>
+          <li><a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language/automaticreferencecounting/">Swift 官方文档 · Automatic Reference Counting</a></li>
+          <li><a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/">Swift 官方文档 · Concurrency</a></li>
+          <li><a href="https://developer.apple.com/documentation/swiftui/managing-user-interface-state">Apple Developer · Managing user interface state</a></li>
+          <li><a href="https://developer.apple.com/documentation/xcode/gathering-information-about-memory-use">Apple Developer · Gathering information about memory use</a></li>
+          <li><a href="https://developer.apple.com/tutorials/instruments/getting-started-with-hang-analysis">Apple Developer · Getting started with hang analysis</a></li>
+          <li><a href="https://developer.apple.com/documentation/webkit/wkwebview">Apple Developer · WKWebView</a></li>
+          <li><a href="https://webkit.org/blog/web_inspector_topics/timelines/">WebKit · Web Inspector Timelines</a></li>
+          <li><a href="https://react.dev/learn/render-and-commit">React · Render and Commit</a></li>
+          <li><a href="https://react.dev/reference/react/useSyncExternalStore">React · useSyncExternalStore</a></li>
+          <li><a href="https://react.dev/reference/react/Profiler">React · Profiler</a></li>
+          <li><a href="https://react.dev/reference/react/memo">React · memo</a></li>
+          <li><a href="https://react.dev/reference/react/useMemo">React · useMemo</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/How_browsers_work">MDN · How browsers work</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Critical_rendering_path">MDN · Critical rendering path</a></li>
+          <li><a href="https://docs.taro.zone/docs/optimized">Taro · 小程序性能优化指南</a></li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>开发面试知识复盘手册 · Interview 001 与 Interview 002 持续复盘 · Swift 与 React 部分原题名称未完全记录</p>
+      </footer>
+    </div>
+  </main>
+
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+      const THEME_KEY = "developer-interview-dossier-theme";
+      const themeButton = document.getElementById("theme-toggle");
+      const status = document.getElementById("status");
+      let statusTimer = 0;
+      let printState = [];
+
+      function announce(message) {
+        clearTimeout(statusTimer);
+        status.textContent = message;
+        status.classList.add("show");
+        statusTimer = window.setTimeout(() => status.classList.remove("show"), 2200);
+      }
+
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        const dark = theme === "dark";
+        themeButton.textContent = dark ? "浅色" : "深色";
+        themeButton.setAttribute("aria-pressed", String(dark));
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      document.getElementById("expand-all").addEventListener("click", () => {
+        document.querySelectorAll("details").forEach(item => { item.open = true; });
+        announce("已展开全部追问");
+      });
+
+      document.getElementById("collapse-all").addEventListener("click", () => {
+        document.querySelectorAll("details").forEach(item => { item.open = false; });
+        announce("已收起全部追问");
+      });
+
+      themeButton.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        setTheme(next);
+        announce(`已切换${next === "dark" ? "深色" : "浅色"}主题`);
+      });
+
+      document.getElementById("print-page").addEventListener("click", () => window.print());
+
+      window.addEventListener("beforeprint", () => {
+        printState = [...document.querySelectorAll("details")].map(item => item.open);
+        document.querySelectorAll("details").forEach(item => { item.open = true; });
+      });
+
+      window.addEventListener("afterprint", () => {
+        document.querySelectorAll("details").forEach((item, index) => { item.open = Boolean(printState[index]); });
+      });
+
+      const stored = localStorage.getItem(THEME_KEY);
+      const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      setTheme(stored === "dark" || stored === "light" ? stored : preferred);
+    })();
+  </script>
+</body>
+</html>
