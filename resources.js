@@ -15,8 +15,8 @@ window.INTERVIEW_RESOURCES = [
     href: "folio-6b2a51.html",
     type: "失败复盘 · 知识补齐",
     index: "02",
-    description: "把两次技术面试暴露的问题连接到 PHASE 真实代码，覆盖 iOS、React、SSE、浏览器渲染与 Agent Harness。",
-    tags: ["iOS 基础", "React 性能", "SSE 全链路", "Agent Harness"],
+    description: "把三次技术面试暴露的问题连接到 PHASE 真实代码，覆盖 iOS、React、弱网、SSE、AI 开发防错与 Agent Harness。",
+    tags: ["iOS 基础", "AI 开发防错", "SSE 全链路", "Agent Harness"],
     status: "持续维护",
     accent: "vermilion"
   }

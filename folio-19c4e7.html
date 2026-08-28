@@ -343,6 +343,7 @@
           <a href="#star-1">SSE 与异步任务</a>
           <a href="#star-2">安全与弱网</a>
           <a href="#star-3">回滚与重构</a>
+          <a href="#interview-003">第三场现场题</a>
           <a href="#truth-boundary">表达边界</a>
           <a href="#cross-questions">横向追问</a>
         </nav>
@@ -632,6 +633,40 @@
       </article>
 
 
+        <details class="cross-card" id="interview-003" data-section open>
+          <summary><span>第三场面试现场回答包</span><span class="summary-note">AI 开发防错 · 弱网 · SSE · 最深刻问题</span><span class="toggle-mark" aria-hidden="true"></span></summary>
+          <div class="cross-body prose">
+            <p class="eyebrow">INTERVIEW 003 · PROJECT DEFENSE</p>
+            <h2>把项目题回答成“判断—机制—证据—边界”</h2>
+            <p>这一组不重复背 iOS 定义，而是帮助你把技术基础落回 PHASE。标准答案、SwiftUI/UIKit 和现场笔试五题已放进知识手册；这里保留最适合现场口述的项目答案。</p>
+
+            <h3>问题一：你用 AI 开发时，怎样解决幻觉和执行不准确</h3>
+            <blockquote><p>我把 AI 输出当成未经验证的第一版，而不是事实来源。开始前，我要求它先读取当前 main、接口契约和相邻测试，把代码事实与假设分开；实现时限制文件范围和验收条件；完成后我自己沿用户操作、API、服务端、数据库和重载读 diff，不只看能不能编译；最后用类型检查、单测、构建、失败路径、review 和 CI 验证。我的 PR 历史里有真实反例：后端 PR 11 范围过大，被关闭后拆成更小的 #13、#15、#16；PR 47 基于错误的数据边界做了品牌 scope，我用 #48 回滚，再按 schema、domain tool、server flow 重建 #49–#51；弱网 PR 19 的初版也在 review 后补了 Taro fail、真正的首包 timeout 和单次收尾。我得到的结论是 AI 能提高搜索和实现速度，但正确性证据必须来自代码、测试和实际运行，最终责任由我承担。</p></blockquote>
+            <details class="qa-item"><summary><span class="qa-index">01</span><span>如果测试也是 AI 写的，你怎样相信测试</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>先检查测试是否表达业务不变量、是否走公开入口、是否包含反例。PR 19 还做了 mutation-style 检查：逐一撤销修复后，19 个新增用例中有 13 个转红，说明测试能抓到故障。绿色测试只是一个 gate，还要结合类型检查、构建、真实流程和 reviewer。</p></div></details>
+            <details class="qa-item"><summary><span class="qa-index">02</span><span>AI 连续给错方案怎么办</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>停止继续改 prompt，先缩成最小复现，读取运行时错误和真实 contract，列出已证伪假设。然后再决定查官方文档、换独立 reviewer，还是人工实现。连续失败通常说明上下文或任务边界错了。</p></div></details>
+            <details class="qa-item"><summary><span class="qa-index">03</span><span>这些代码到底哪些是你做的</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>我会明确说初版实现中大量使用 Codex/Claude Code，部分关键修正来自 reviewer。我的直接贡献是定义问题和约束、选择拆分或回滚、维护 PR、读关键路径、补验证并推动合并。回答时落到我能证明的 PR 和文件，不把所有代码行说成手写。</p></div></details>
+
+            <h3>问题二：PHASE 如何处理弱网和断网</h3>
+            <blockquote><p>我不会把弱网处理概括成自动重试，因为是否产生副作用决定了能不能重试。iOS 用 NWPathMonitor 发布 online、受限或 offline 状态，界面显示 OfflineStatusBanner，并从按用户保存、带 TTL 与最大陈旧时间的 OfflineSnapshotStore 降级展示。聊天 SSE 把非 2xx、首包等待、流中断和取消分开处理，断流时保留已收到文本。小程序 PR 19 更完整：Taro 的 fail、complete 和 abort 统一经过只执行一次的收尾路径；20 秒只约束首 chunk，不能用整个 request timeout 截断健康长流；测肤 upload 会创建非幂等 job，所以不重传 upload，只对 polling 容忍两次瞬时失败，401/403/404 立即结束。核心是按失败阶段和幂等性设计恢复，不是 retry everything。</p></blockquote>
+            <details class="qa-item"><summary><span class="qa-index">04</span><span>为什么断网后不自动重发聊天</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>服务端可能已经持久化消息或执行写工具，只是确认没有到客户端。没有完善的 idempotency key 和服务端去重语义时，重发可能产生重复 turn 或副作用。更安全的是保留状态、提示用户，并优先查询或恢复已有结果。</p></div></details>
+            <details class="qa-item"><summary><span class="qa-index">05</span><span>为什么首包超时和总超时要分开</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>生成可能持续几十秒，但只要不断有 chunk 就是健康流。整个请求 20 秒超时会误杀长回答；首包 timer 只控制 time-to-first-event，收到第一块数据后清除，再用 idle watchdog 判断真正停滞。</p></div></details>
+
+            <h3>问题三：完整讲一次 SSE 从发送到 Agent 返回</h3>
+            <blockquote><p>客户端先乐观加入用户消息并生成 clientTurnId。iOS 的 ChatSSEClient 用 URLSession.bytes 向 POST /api/chat 发送 token、JSON body 和 Accept: text/event-stream，小程序用开启 chunked 的 Taro.request。服务端 chat route 鉴权并校验 episode 归属，先尽早写 turn_start，随后恢复或创建 session、持久化用户消息、加载 active catalog 和 Agent。Agent factory 组装 system prompt、最近完整对话、用户上下文和 11 个工具。kernel 调模型；若模型产生 tool call，就按名字找到工具、执行并把 toolResult 回填，再继续推理。route 把 tool_start/end、llm_start/end、text_delta、message_end 与 turn_end 按序写成 SSE。iOS parser 跨 chunk 缓冲并按空行分帧，ChatViewModel 用 for await 消费事件、在 MainActor 更新 UI，并把文本发布节流到大约 50ms；小程序用 streaming TextDecoder 防 UTF-8 被 chunk 切断。结束时落定消息，错误、取消和断流都必须显式收敛。</p></blockquote>
+            <details class="qa-item"><summary><span class="qa-index">06</span><span>SSE 和 WebSocket 的选择</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>SSE 是服务端到客户端的单向文本事件流，PHASE 的模式是用户通过一次 HTTP POST 发消息、服务端持续回状态和文本，所以足够并且更容易复用鉴权、代理与 HTTP 基础设施。WebSocket 是全双工持久连接，更适合双方高频互发。</p></div></details>
+            <details class="qa-item"><summary><span class="qa-index">07</span><span>为什么聊天可以用 POST SSE</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>浏览器原生 EventSource 限定 GET，但 SSE wire format 本质是 text/event-stream response。URLSession 和 Taro 都能 POST 后流式读取 response body，因此可以把聊天输入放在 JSON body。不能把 EventSource API 的限制误说成 SSE 协议只能 GET。</p></div></details>
+
+            <h3>问题四：开发中最深刻的问题是什么</h3>
+            <p><strong>推荐主讲 PR #19，因为它同时覆盖用户体验、网络机制、状态机、幂等性和验证。</strong></p>
+            <blockquote><p>我最深刻的一次问题是小程序弱网下的静默失败。用户会看到“思考中”突然消失、已经生成的部分回答被清空，测肤轮询一次抖动后只能重拍。排查后发现不是一个错误，而是同一类状态边界没有建模：非 2xx body 被当成 SSE 解析；Taro 的整个请求 timeout 被误当成首包 timeout；fail、complete 和 abort 会竞争收尾；流中断直接清空 partial text；而测肤 upload 是非幂等，不能无脑重试。我把这些路径改成显式状态机：先检查 HTTP status，首 chunk 单独计时，所有终止回调只收敛一次，部分文本保留并标注中断，upload 不重传、只重试读取 job 状态。PR 新增 19 个用例，撤销修复会让 13 个转红，最终 129 个文件、706 个测试、TypeScript 与生产构建通过。它让我学会，可靠性不是多加几个 catch，而是先识别副作用、终止状态和可以安全恢复的边界。</p></blockquote>
+            <details class="qa-item"><summary><span class="qa-index">08</span><span>你为什么觉得这个方案更好</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>它把不同失败按语义分开：认证失败不能重试，瞬时 polling 失败可以有限重试，非幂等 upload 不能重复，健康长流不能被总超时误杀。每个状态都有用户可见结果，也有能被回归测试捕获的收敛路径。</p></div></details>
+            <details class="qa-item"><summary><span class="qa-index">09</span><span>结果为什么不讲线上故障率下降</span><span class="toggle-mark" aria-hidden="true"></span></summary><div class="qa-answer prose"><p>仓库能证明测试、TypeScript、构建、CI 和合并，不能证明生产断流率下降了多少。若重新上线，我会补首包时间、断流原因、重复 job、partial-response preserved 和重试次数等埋点，再做发布前后比较。</p></div></details>
+
+            <h3>当前 Agent Harness 的归属边界</h3>
+            <p>Andy 本人可用后端 PR #50 讲 active catalog grounding，用后端 PR #16/#43 与 iOS PR #1 讲 SSE 和 turn 状态。当前 intent classifier 的 44 条 gold set、0.932 macro recall 与 18/18 model runs 来自团队后续 PR #94。面试中可以说“这是当前系统采用的机制，我阅读了实现并能解释”，不能改成“我设计并实现了这套 gate”。</p>
+          </div>
+        </details>
+
         <section class="truth-card" id="truth-boundary" data-section>
           <header class="truth-banner">
             <p class="eyebrow">TRUTH BOUNDARY</p>
@@ -678,7 +713,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <strong>PHASE INTERNSHIP · STAR PLAYBOOK</strong>
-      <p>公开脱敏版 · 单文件离线版 · GitHub 证据位于文内链接</p>
+      <p>公开脱敏版 · 持续更新 · 单文件离线版 · GitHub 证据位于文内链接</p>
     </div>
   </footer>
   <div class="status" id="status" role="status" aria-live="polite"></div>
